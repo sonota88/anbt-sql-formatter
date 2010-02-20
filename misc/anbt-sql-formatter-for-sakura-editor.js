@@ -17,8 +17,8 @@ var macroPath = macroDir + "anbt-sql-formatter-for-sakura-editor.js";
 var scriptPath   = asfHome + "bin\\anbt-sql-formatter";
 var libDir       = asfHome + "lib";
 
-var tempFileSrc  = macroDir + "____temp.txt";
-var tempFileDest = macroDir + "____temp2.txt";
+var tempFileSrc  = macroDir + "____temp_src.txt";
+var tempFileDest = macroDir + "____temp_dest.txt";
 
 var timeoutSec   = 10;
 

@@ -5,13 +5,13 @@
 
 == 概要
 
-いがぴょんさん作の Java製SQL整形ツール BlancoSqlFormatter
+Java製の SQL整形ツール BlancoSqlFormatter
 
 blancoSqlFormatter - SQL整形ライブラリ
 http://www.igapyon.jp/blanco/blancosqlformatter.html
 
 を Ruby に移植したものです。
-多少改造が加わっています。
+完全な移植を目指したものではなく、改造が加わっています。
 
 
 == インストール
