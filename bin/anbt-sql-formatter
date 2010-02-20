@@ -1,0 +1,37 @@
+#! /usr/bin/ruby1.8
+# -*- coding: utf-8 -*-
+
+require "pp"
+
+require "anbt-sql-formatter/formatter"
+
+def main
+  src = ""
+  if (not ARGV[0].nil?) && File.exist?(ARGV[0])
+    src = File.read(ARGV[0])
+  else
+    while line = gets
+      src << line
+    end
+  end
+
+  rule = AnbtSql::Rule.new
+
+  # キーワードを大文字に変換
+  rule.keyword = AnbtSql::Rule::KEYWORD_UPPER_CASE
+  
+  # User defined additional functions:
+  %w(count sum substr date).each{|func_name|
+    rule.function_names << func_name.upcase
+  }
+
+  #rule.indentString = "('-')"
+  rule.indent_string = "    "
+  
+  formatter = AnbtSql::Formatter.new(rule)
+  result = formatter.format(src)
+  puts result
+  #pp result
+end
+
+main()
