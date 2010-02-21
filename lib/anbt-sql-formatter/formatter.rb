@@ -90,6 +90,7 @@ class AnbtSql
         end
       }
     end
+
     
     ##
     # .
@@ -125,7 +126,9 @@ class AnbtSql
         target_tokens_size = kw.size * 2 - 1
 
         while index < tokens.size - target_tokens_size
-          temp_tokens = tokens[index, target_tokens_size].map{|x| x.string.sub(/\s+/, " ") }
+          temp_tokens = tokens[index, target_tokens_size].map {|x|
+            x.string.sub(/\s+/, " ")
+          }
           
           if /#{kw.join(" ")}/i =~ temp_tokens.join
             tokens[index].string = temp_tokens.join

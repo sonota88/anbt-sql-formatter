@@ -1,4 +1,4 @@
-#! /usr/bin/ruby1.8
+#! /usr/bin/ruby
 # -*- coding: utf-8 -*-
 
 require "pp"
@@ -6,133 +6,23 @@ require "pp"
 require "anbt-sql-formatter/formatter"
 
 =begin
-ここでは Ruby の「オープンクラス」という機能を使って
-整形ルールのカスタマイズ例としていますが、
-気持ちが悪い場合は継承でも良いかと思います。
+rule のプロパティを修正するだけではなく
+さらに踏み込んでカスタマイズしたい場合は
+formatter.rb 内の AnbtSql::Formatter#format_list_main_loop 
+などをオーバーライドすると良いでしょう。
 
-カスタマイズが不要な場合はこの部分は不要です。
+Ruby に詳しくない場合は「Ruby オープンクラス」
+「Ruby モンキーパッチ」で検索してみてください。
+
+継承の方が分かりやすいという場合は
+継承でも良いと思います。
 =end
-class AnbtSql::Formatter
-  def format_list_main_loop(argList)
-    # インデントを整える。
-    indent = 0
-    # 丸カッコのインデント位置を覚える。
-    bracketIndent = Stack.new
 
-    prev = AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE,
-                              " ");
-
-    #    for (int index = 0; index < argList.size(); index++) {
-    # for index in 0...argList.size # argList のサイズが変わるため、これでは誤作動する
-    index = 0
-    while index < argList.size
-      token = argList.get(index)
-
-      if token.ttype == AnbtSql::TokenConstants::SYMBOL # ■■
-        # indentを１つ増やし、'('のあとで改行。
-        if token.string == "("
-          @function_bracket.push( @rule.function?(prev.string) ? true : false )
-          bracketIndent.push(indent)
-          indent += 1
-          index += insert_return_and_indent(argList, index + 1, indent)
-          # indentを１つ増やし、')'の前と後ろで改行。
-        elsif token.string == ")"
-          #pp "@@@@", (bracketIndent.pop()) ; exit
-          indent = (bracketIndent.pop()).to_i
-          index += insert_return_and_indent(argList, index, indent);
-          @function_bracket.pop();
-                
-          # ','の前で改行
-        elsif token.string == ","
-          index += insert_return_and_indent(argList, index, indent, "x");
-        elsif token.string == ";"
-          # 2005.07.26 Tosiki Iga とりあえずセミコロンでSQL文がつぶれないように改良
-          indent = 0
-          index += insert_return_and_indent(argList, index, indent)
-        end
-      
-      elsif token.ttype == AnbtSql::TokenConstants::KEYWORD # ■■
-        # indentを２つ増やし、キーワードの後ろで改行
-        if (token.string.equalsIgnoreCase("DELETE") ||
-            token.string.equalsIgnoreCase("SELECT") ||
-            token.string.equalsIgnoreCase("UPDATE")   )
-          indent += 2
-          index += insert_return_and_indent(argList, index + 1, indent, "+2")
-        end
-        # indentを１つ増やし、キーワードの後ろで改行
-        if @rule.kw_plus1_indent_x_nl.any?{ |kw|
-            token.string.equalsIgnoreCase(kw)
-          }
-          indent += 1
-          index += insert_return_and_indent(argList, index + 1, indent);
-        end
-
-        # キーワードの前でindentを１つ減らして改行、キーワードの後ろでindentを戻して改行。
-        if @rule.kw_minus1_indent_nl_x_plus1_indent.any?{ |kw|
-            token.string.equalsIgnoreCase(kw)
-          }
-          index += insert_return_and_indent(argList, index    , indent - 1);
-          index += insert_return_and_indent(argList, index + 1, indent    );
-        end
-        # キーワードの前でindentを１つ減らして改行、キーワードの後ろでindentを戻して改行。
-        if (token.string.equalsIgnoreCase("VALUES"))
-          indent -= 1
-          index += insert_return_and_indent(argList, index, indent);
-        end
-        # キーワードの前でindentを１つ減らして改行
-        if (token.string.equalsIgnoreCase("END"))
-          indent -= 1
-          index += insert_return_and_indent(argList, index, indent);
-        end
-
-        # キーワードの前で改行
-        if @rule.kw_nl_x.any?{ |kw| token.string.equalsIgnoreCase(kw) }
-          index += insert_return_and_indent(argList, index, indent);
-        end
-
-        # キーワードの前で改行
-        if (token.string.equalsIgnoreCase("ON"   ) ||
-            token.string.equalsIgnoreCase("USING")   ) 
-          index += insert_return_and_indent(argList, index, indent + 1);
-        end
-
-        # キーワードの前で改行。indentを強制的に０にする。
-        if (token.string.equalsIgnoreCase("UNION"    ) ||
-            token.string.equalsIgnoreCase("INTERSECT") ||
-            token.string.equalsIgnoreCase("EXCEPT"   )   ) 
-          indent -= 2
-          index += insert_return_and_indent(argList, index    , indent);
-          index += insert_return_and_indent(argList, index + 1, indent);
-        end
-        if token.string.equalsIgnoreCase("BETWEEN")
-          encounterBetween = true;
-        end
-        if token.string.equalsIgnoreCase("AND")
-          # BETWEEN のあとのANDは改行しない。
-          if not encounterBetween
-            index += insert_return_and_indent(argList, index, indent)
-          end
-          encounterBetween = false;
-        end
-
-      elsif (token.ttype == AnbtSql::TokenConstants::COMMENT) # ■■
-        if token.string.startsWith("/*")
-          # マルチラインコメントの後に改行を入れる。
-          index += insert_return_and_indent(argList, index + 1, indent);
-        elsif /^--/ =~ token.string
-          ## 1行コメント末尾の改行を削る。
-          ## トーカナイズ時に削った方が良いかも
-          token.string.chomp!
-          
-          index += insert_return_and_indent(argList, index + 1, indent);
-        end
-      end
-      prev = token
-      
-      index += 1
-    end
-  end
-end
+# class AnbtSql::Formatter
+#   def format_list_main_loop(tokens)
+#     # メソッドの処理を書き換える
+#   end
+# end
 
 
 if $0 == __FILE__
@@ -143,27 +33,33 @@ if $0 == __FILE__
 
   rule = AnbtSql::Rule.new
 
-  # キーワードを大文字に変換
-  rule.keyword = AnbtSql::Rule::KEYWORD_UPPER_CASE
-  rule.space_after_comma = true
-  
-  rule.kw_multi_words << "INNER JOIN"
-  rule.kw_minus1_indent_nl_x_plus1_indent << "INNER JOIN"
+  # rule のプロパティを修正することで
+  # 動作をカスタマイズします。
+  # 詳細については rule.rb をご覧ください。
 
-  # DB2
-  rule.kw_multi_words << "fetch first"
-  rule.kw_nl_x << "FETCH FIRST"
+  # キーワードを大文字・小文字に変換しない
+  rule.keyword = AnbtSql::Rule::KEYWORD_NONE
+  
+  # 複数単語のキーワードを登録
+  rule.kw_multi_words << "INNER JOIN"
+  rule.kw_nl_x << "INNER JOIN"
+
+  # "THEN" の前で改行するのをやめさせる
+  rule.kw_nl_x -= ["THEN"]
+  # "WHEN" の前で改行させるようにする
+  rule.kw_nl_x << "WHEN"
 
   # User defined additional functions:
+  # ユーザ定義関数の追加: 
   %w(count sum substr date).each{|func_name|
     rule.function_names << func_name.upcase
   }
 
-  #rule.indentString = "('-')"
-  rule.indent_string = "    "
+  #rule.indent_string = "    "
+  #rule.indent_string = "('-')"
+  rule.indent_string = "|   "
   
   formatter = AnbtSql::Formatter.new(rule)
   result = formatter.format(src)
-  puts result
-  #pp result
+  print result
 end
