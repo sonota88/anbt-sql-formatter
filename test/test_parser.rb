@@ -211,8 +211,8 @@ EOB
   end
   
 
-  def test_blanco_sql_parser
-    msg = "blanco_sql_parser basic case - "
+  def test_parser
+    msg = "parser basic case - "
 
     ########
     assert_equals( msg + "", (<<EOB
