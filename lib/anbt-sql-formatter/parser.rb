@@ -117,7 +117,7 @@ class AnbtSql
         if /(0x[0-9a-fA-F]+)/       =~ @before[@pos..-1] || # hex
            /(\d+(\.\d+(e-?\d+)?)?)/ =~ @before[@pos..-1]    # float or scientific
           num = $1
-          @pos += num.length - 1
+          @pos += num.length
           return AnbtSql::Token.new(AnbtSql::TokenConstants::VALUE,
                                     num, start_pos)
         end
