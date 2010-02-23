@@ -125,7 +125,7 @@ class AnbtSql
         index = 0
         target_tokens_size = kw.size * 2 - 1
 
-        while index < tokens.size - target_tokens_size
+        while index <= tokens.size - target_tokens_size
           temp_tokens = tokens[index, target_tokens_size].map {|x|
             x.string.sub(/\s+/, " ")
           }

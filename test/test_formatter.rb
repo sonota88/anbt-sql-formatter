@@ -89,6 +89,16 @@ EOB
     parser = AnbtSql::Parser.new
 
     ########
+    tokens = parser.parse("gRoup BY")
+    @fmt.concat_multiwords_keyword(tokens)
+    assert_equals( msg + "minimum length",  (<<EOB
+<keyword>gRoup BY</>
+EOB
+                               ).chop,
+                   Helper.format_tokens(tokens)
+                   )
+
+    ########
     tokens = parser.parse("a gRoup BY b")
     @fmt.concat_multiwords_keyword(tokens)
     assert_equals( msg + "",  (<<EOB
