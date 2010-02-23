@@ -142,6 +142,72 @@ EOB
                   ).chomp,
                  Helper.format_tokens([ @parser.next_sql_token ])
                  )
+
+    ########
+    @parser.before = '-1.23 '
+    @parser.pos = 0
+    assert_equals( msg + "value", 
+                 (<<EOB
+<value>-1.23</>
+EOB
+                  ).chomp,
+                 Helper.format_tokens([ @parser.next_sql_token ])
+                 )
+
+    ########
+    @parser.before = '1.23e45 '
+    @parser.pos = 0
+    assert_equals( msg + "value", 
+                 (<<EOB
+<value>1.23e45</>
+EOB
+                  ).chomp,
+                 Helper.format_tokens([ @parser.next_sql_token ])
+                 )
+
+    ########
+    @parser.before = '1.23e-45 '
+    @parser.pos = 0
+    assert_equals( msg + "value", 
+                 (<<EOB
+<value>1.23e-45</>
+EOB
+                  ).chomp,
+                 Helper.format_tokens([ @parser.next_sql_token ])
+                 )
+
+    ########
+    @parser.before = '-1.23e-45 '
+    @parser.pos = 0
+    assert_equals( msg + "value", 
+                 (<<EOB
+<value>-1.23e-45</>
+EOB
+                  ).chomp,
+                 Helper.format_tokens([ @parser.next_sql_token ])
+                 )
+
+    ########
+    @parser.before = '0x01 '
+    @parser.pos = 0
+    assert_equals( msg + "value", 
+                 (<<EOB
+<value>0x01</>
+EOB
+                  ).chomp,
+                 Helper.format_tokens([ @parser.next_sql_token ])
+                 )
+
+    ########
+    @parser.before = '1x'
+    @parser.pos = 0
+    assert_equals( msg + "value", 
+                 (<<EOB
+<value>1</>
+EOB
+                  ).chomp,
+                 Helper.format_tokens([ @parser.next_sql_token ])
+                 )
   end
   
 

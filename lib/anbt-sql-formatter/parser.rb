@@ -114,6 +114,14 @@ class AnbtSql
                                     ";", start_pos)
 
       elsif digit?(@char)
+        if /(0x[0-9a-fA-F]+)/       =~ @before[@pos..-1] || # hex
+           /(\d+(\.\d+(e-?\d+)?)?)/ =~ @before[@pos..-1]    # float or scientific
+          num = $1
+          @pos += num.length - 1
+          return AnbtSql::Token.new(AnbtSql::TokenConstants::VALUE,
+                                    num, start_pos)
+        end
+
         s = ""
         while (digit?(@char) || @char == '.') 
           # if (ch == '.') type = Token.REAL
@@ -157,8 +165,9 @@ class AnbtSql
         @pos += 1
         if (@pos >= @before.length()) 
           return AnbtSql::Token.new(AnbtSql::TokenConstants::SYMBOL,
-                                      s, start_pos)
+                                    s, start_pos)
         end
+
         # ２文字の記号かどうか調べる
         ch2 = @before.charAt(@pos)
         #for (int i = 0; i < two_character_symbol.length; i++) {
@@ -170,6 +179,15 @@ class AnbtSql
             break
           end
         end
+
+        if @char == "-"
+          /^(\d+(\.\d+(e-?\d+)?)?)/ =~ @before[@pos..-1] # float or scientific
+          num = $1
+          @pos += num.length
+          return AnbtSql::Token.new(AnbtSql::TokenConstants::VALUE,
+                                    s + num, start_pos)
+        end
+
         return AnbtSql::Token.new(AnbtSql::TokenConstants::SYMBOL,
                                     s, start_pos)
 
