@@ -2,6 +2,7 @@
 
 require File.join(File.expand_path(File.dirname(__FILE__)), "helper")
 
+require "anbt-sql-formatter/rule"
 require "anbt-sql-formatter/parser"
 
 
@@ -14,7 +15,7 @@ end
 
 class TestAnbtSqlParser < Test::Unit::TestCase
   def setup
-    @parser = AnbtSql::Parser.new
+    @parser = AnbtSql::Parser.new(AnbtSql::Rule.new)
   end
 
 
@@ -209,7 +210,7 @@ EOB
                  Helper.format_tokens([ @parser.next_sql_token ])
                  )
   end
-  
+
 
   def test_parser
     msg = "parser basic case - "
@@ -308,6 +309,30 @@ aa"bb
 EOB
                                                                  ).strip
                                                                 ))
+                   )
+
+    ########
+    assert_equals( msg + "multiwords keyword", (<<EOB
+<keyword>group by</>
+EOB
+                   ).strip, Helper.format_tokens( @parser.parse((<<EOB
+group by
+EOB
+                                                                 ).strip
+                                                                ))
+                   )
+
+    ########
+    assert_equals( msg + "multiwords keyword 2",
+                   (<<EOB
+<name>a</>
+<space> </>
+<keyword>group by</>
+<space> </>
+<name>B</>
+EOB
+                    ).strip,
+                   Helper.format_tokens( @parser.parse("a group by B") )
                    )
 
   end

@@ -11,7 +11,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
   def setup
     @rule = AnbtSql::Rule.new
     @rule.indent_string = INDENT_STR
-    @parser = AnbtSql::Parser.new
+    @parser = AnbtSql::Parser.new(@rule)
 
     @fmt = AnbtSql::Formatter.new(@rule)
   end
@@ -84,57 +84,11 @@ EOB
   end
 
   
-  def test_concat_multiwords_keyword
-    msg = "concat_multiwords_keyword - "
-    parser = AnbtSql::Parser.new
-
-    ########
-    tokens = parser.parse("gRoup BY")
-    @fmt.concat_multiwords_keyword(tokens)
-    assert_equals( msg + "minimum length",  (<<EOB
-<keyword>gRoup BY</>
-EOB
-                               ).chop,
-                   Helper.format_tokens(tokens)
-                   )
-
-    ########
-    tokens = parser.parse("a gRoup BY b")
-    @fmt.concat_multiwords_keyword(tokens)
-    assert_equals( msg + "",  (<<EOB
-<name>a</>
-<space> </>
-<keyword>gRoup BY</>
-<space> </>
-<name>b</>
-EOB
-                               ).chop,
-                   Helper.format_tokens(tokens)
-                   )
-
-    ########
-    tokens = parser.parse("a ordEr bY b")
-    @fmt.concat_multiwords_keyword(tokens)
-    assert_equals( msg + "",  (<<EOB
-<name>a</>
-<space> </>
-<keyword>ordEr bY</>
-<space> </>
-<name>b</>
-EOB
-                   ).chop,
-                  Helper.format_tokens(tokens)
-                  )
-  end
-
-
   def test_remove_symbol_side_space
     msg = "remove_symbol_side_space - "
     
-    parser = AnbtSql::Parser.new
-
     ########
-    tokens = parser.parse("a (b")
+    tokens = @parser.parse("a (b")
     @fmt.remove_symbol_side_space(tokens)
     assert_equals( msg + "",  (<<EOB
 <name>a</>
@@ -147,7 +101,7 @@ EOB
 
 
     ########
-    tokens = parser.parse("a( b")
+    tokens = @parser.parse("a( b")
     @fmt.remove_symbol_side_space(tokens)
     assert_equals( msg + "",  (<<EOB
 <name>a</>
@@ -160,7 +114,7 @@ EOB
 
 
     ########
-    tokens = parser.parse("a ( b")
+    tokens = @parser.parse("a ( b")
     @fmt.remove_symbol_side_space(tokens)
     assert_equals( msg + "",  (<<EOB
 <name>a</>
@@ -176,10 +130,8 @@ EOB
   def test_special_treatment_for_parenthesis_with_one_element
     msg = "special_treatment_for_parenthesis_with_one_element - "
     
-    parser = AnbtSql::Parser.new
-
     ########
-    tokens = parser.parse("( 1 )")
+    tokens = @parser.parse("( 1 )")
     @fmt.special_treatment_for_parenthesis_with_one_element(tokens)
     assert_equals( msg + "one element, should not separate",  (<<EOB
 <symbol>(1)</>
@@ -190,7 +142,7 @@ EOB
 
 
     ########
-    tokens = parser.parse("(1,2)")
+    tokens = @parser.parse("(1,2)")
     @fmt.special_treatment_for_parenthesis_with_one_element(tokens)
     assert_equals( msg + "more than one element, should separate",  (<<EOB
 <symbol>(</>
@@ -207,10 +159,9 @@ EOB
 
   def test_insert_space_between_tokens
     msg = "insert_space_between_tokens - "
-    parser = AnbtSql::Parser.new
 
     ########
-    tokens = parser.parse("a=")
+    tokens = @parser.parse("a=")
     @fmt.insert_space_between_tokens(tokens)
     assert_equals(msg, (<<EOB
 <name>a</>
@@ -222,7 +173,7 @@ EOB
                   )
   
     ########
-    tokens = parser.parse("=b")
+    tokens = @parser.parse("=b")
     @fmt.insert_space_between_tokens(tokens)
     assert_equals(msg, (<<EOB
 <symbol>=</>
@@ -237,10 +188,9 @@ EOB
   
   def test_insert_return_and_indent
     msg = "insert_return_and_indent - "
-    parser = AnbtSql::Parser.new
 
     ########
-    tokens = parser.parse("foo bar")
+    tokens = @parser.parse("foo bar")
     
     index, indent_depth = 1, 1
     
@@ -267,7 +217,7 @@ EOB
 
     ########
     # msg = "" #"後の空白を置き換え"
-    tokens = parser.parse("select foo")
+    tokens = @parser.parse("select foo")
     
     index, indent_depth = 1, 1
     
@@ -294,7 +244,7 @@ EOB
 
     ########
     msg = "" #"前の空白を置き換え"
-    tokens = parser.parse("select foo")
+    tokens = @parser.parse("select foo")
     index, indent_depth = 2, 1
     
     assert_equals( msg + "before",  (<<EOB
@@ -321,7 +271,7 @@ EOB
 
     ########
     msg = "indent depth = 2"
-    tokens = parser.parse("foo bar")
+    tokens = @parser.parse("foo bar")
     index, indent_depth = 1, 2
     
     assert_equals( msg + "before",  (<<EOB
@@ -347,7 +297,7 @@ EOB
 
     ########
     msg = "kw, nl, kw"
-    tokens = parser.parse("select\ncase")
+    tokens = @parser.parse("select\ncase")
 
     assert_equals( msg + "",  (<<EOB
 <keyword>select</>
@@ -391,7 +341,7 @@ EOB
 
     ########
     msg = "指定した index に対して tokens[index] が存在しないので 0 を返すべき"
-    tokens = parser.parse("foo bar")
+    tokens = @parser.parse("foo bar")
 
     index = 10
     result = @fmt.insert_return_and_indent(tokens, index, 1)

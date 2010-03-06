@@ -14,8 +14,8 @@ class AnbtSql
     @rule = nil
 
     def initialize(rule)
-      @parser = AnbtSql::Parser.new
       @rule = rule
+      @parser = AnbtSql::Parser.new(@rule)
       
       # 丸カッコが関数のものかどうかを記憶
       @function_bracket = Stack.new
@@ -108,38 +108,6 @@ class AnbtSql
         end
         index += 1
       end
-    end
-
-
-    ##
-    # ２つ以上並んだキーワードは１つのキーワードとみなします。
-    #     ["a", " ", "group", " ", "by", " ", "b"]
-    #  => ["a", " ", "group by",         " ", "b"] 
-    def concat_multiwords_keyword(tokens)
-      temp_kw_list = @rule.kw_multi_words.map{|kw| kw.split(" ") }
-      
-      # ワード数が多い順から
-      temp_kw_list.sort{ |a, b|
-        b.size <=> a.size
-      }.each{|kw|
-        index = 0
-        target_tokens_size = kw.size * 2 - 1
-
-        while index <= tokens.size - target_tokens_size
-          temp_tokens = tokens[index, target_tokens_size].map {|x|
-            x.string.sub(/\s+/, " ")
-          }
-          
-          if /#{kw.join(" ")}/i =~ temp_tokens.join
-            tokens[index].string = temp_tokens.join
-            (target_tokens_size-1).downto(1).each{|c|
-              tokens.delete_at(index + c)
-            }
-          end
-
-          index += 1
-        end
-      }
     end
 
 
@@ -367,7 +335,6 @@ class AnbtSql
 
       modify_keyword_case(tokens)
       remove_symbol_side_space(tokens)
-      concat_multiwords_keyword(tokens)
       concat_operator_for_oracle(tokens)
 
       encounterBetween = false

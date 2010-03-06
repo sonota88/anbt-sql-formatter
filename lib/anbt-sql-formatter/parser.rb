@@ -10,7 +10,9 @@ require "anbt-sql-formatter/coarse-tokenizer"
 class AnbtSql
   class Parser
 
-    def initialize
+    def initialize(rule)
+      @rule = rule
+
       # 解析前の文字列
       @before = nil
 
@@ -201,7 +203,6 @@ class AnbtSql
     end
 
 
-
     def prepare_tokens(coarse_tokens)
       @tokens = []
 
@@ -251,6 +252,38 @@ class AnbtSql
     end
 
 
+    ##
+    # ２つ以上並んだキーワードは１つのキーワードとみなします。
+    #     ["a", " ", "group", " ", "by", " ", "b"]
+    #  => ["a", " ", "group by",         " ", "b"] 
+    def concat_multiwords_keyword(tokens)
+      temp_kw_list = @rule.kw_multi_words.map{|kw| kw.split(" ") }
+      
+      # ワード数が多い順から
+      temp_kw_list.sort{ |a, b|
+        b.size <=> a.size
+      }.each{|kw|
+        index = 0
+        target_tokens_size = kw.size * 2 - 1
+
+        while index <= tokens.size - target_tokens_size
+          temp_tokens = tokens[index, target_tokens_size].map {|x|
+            x.string.sub(/\s+/, " ")
+          }
+          
+          if /#{kw.join(" ")}/i =~ temp_tokens.join
+            tokens[index].string = temp_tokens.join
+            (target_tokens_size-1).downto(1).each{|c|
+              tokens.delete_at(index + c)
+            }
+          end
+
+          index += 1
+        end
+      }
+    end
+
+
     def next_token
       @tokens[@token_pos]
     end
@@ -265,7 +298,7 @@ class AnbtSql
 
       prepare_tokens(coarse_tokens)
       
-      list = []
+      tokens = []
       count = 0
       @token_pos = 0
       loop {
@@ -281,12 +314,14 @@ class AnbtSql
           ;
         end
         
-        list.push token
+        tokens.push token
         count += 1
         @token_pos += 1
       }
+      
+      concat_multiwords_keyword(tokens)
 
-      list
+      tokens
     end
   end
 end
