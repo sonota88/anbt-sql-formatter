@@ -7,29 +7,84 @@ var envPath = "C:\\ruby\\bin\\ruby.exe";
 var macroDir = "C:\\apps\\sakuraW_rXXXX\\macros\\";
 
 // anbt-sql-formatter のフォルダ
-var asfHome = "C:\\apps\\sonota-anbt-sql-formatter-ad9917c\\";
+var asfHome = "C:\\apps\\anbt-sql-formatter\\";
+
 
 //================================
 
-// このマクロファイルのパス
-var macroPath = macroDir + "anbt-sql-formatter-for-sakura-editor.js";
+
+function checkPath( path ){
+  if( ! path.match( /\\$/ ) ){
+    path += "\\";
+  }
+  
+  return path;
+}
+
+macroDir = checkPath( macroDir );
+asfHome  = checkPath( asfHome );
+
+
+//================================
+
 
 var scriptPath   = asfHome + "bin\\anbt-sql-formatter";
 var libDir       = asfHome + "lib";
 
+var macroPath    = macroDir + "anbt-sql-formatter-for-sakura-editor.js";
 var tempFileSrc  = macroDir + "____temp_src.txt";
 var tempFileDest = macroDir + "____temp_dest.txt";
 
 var timeoutSec   = 10;
 
+
 //================================
+
 
 var ForReading = 1;
 var ForWriting = 2;
 
 var wShell = new ActiveXObject( "WScript.Shell" );
 
+
 //================================
+
+
+function pathExists( varName, type ){
+  var path = eval(varName);
+  var fso = new ActiveXObject( "Scripting.FileSystemObject" );
+  var typeMsg;
+  var result = true;
+
+  switch(type){
+  case "file":
+    typeMsg = "ファイル";
+    if( ! fso.FileExists( path ) ){
+      result = false;
+    }
+    break;
+  case "folder":
+    typeMsg = "フォルダ";
+    if( ! fso.FolderExists( path ) ){
+      result = false;
+    }
+    break;
+  default:
+    wShell.Popup( "変数 type の指定が間違っています。" );
+    return;
+  }
+
+  if( ! result ){
+    wShell.Popup( typeMsg + ' "' + path + "\" が見つかりません。\n変数 " + varName + " のパス指定を確認してください。" );
+    return false;
+  }else{
+    return true;
+  }
+}
+
+
+//================================
+
 
 function writeFile( path, content ){
   var fso = new ActiveXObject( "Scripting.FileSystemObject" );
@@ -37,6 +92,7 @@ function writeFile( path, content ){
   fout.WriteLine( content );
   fout.Close();
 }
+
 
 function readFile( path ){
   var fso = new ActiveXObject( "Scripting.FileSystemObject" ); 
@@ -46,10 +102,11 @@ function readFile( path ){
   return content;
 }
 
+
 //================================
 
-if( typeof(Editor) != "undefined" ){
-  // ■サクラエディタから呼び出された場合
+
+function callFromSakuraEditor(){
   var selectedStr = GetSelectedString(0);
   var fso = new ActiveXObject( "Scripting.FileSystemObject" );
   if( fso.FileExists( tempFileSrc  ) ){ fso.GetFile( tempFileSrc  ).Delete(); }
@@ -65,27 +122,37 @@ if( typeof(Editor) != "undefined" ){
 
   if( fso.FileExists( tempFileSrc  ) ){ fso.GetFile( tempFileSrc  ).Delete(); }
   if( fso.FileExists( tempFileDest ) ){ fso.GetFile( tempFileDest ).Delete(); }
+}
 
-}else if( typeof(WScript)!="undefined" ){
-  // ■cscript から呼び出された場合
+
+function callFromCScript(){
   var commandStr = 'cmd /c  ' + envPath + ' -I ' + libDir + ' "' + scriptPath +'"  "'+ tempFileSrc + '"' ;
   var execObj = wShell.Exec( commandStr );
 
-  // 処理が終了するか、タイムアウトするまで待つ
+  // 処理が終了するか、またはタイムアウトするまで待つ
   var startSec = (new Date()).getTime();
   while( execObj.status == 0){
     WScript.Sleep( 500 );
     if( (new Date()).getTime() - startSec > timeoutSec ){ break; }
   }
 
-  var result
+  var result;
   if( execObj.exitCode == 0){
     result = execObj.StdOut.ReadAll();
   }else{
     result = execObj.StdErr.ReadAll();
   }
   writeFile( tempFileDest, result );
+}
 
+
+//================================
+
+
+if( typeof(Editor) != "undefined" ){
+  callFromSakuraEditor();
+}else if( typeof(WScript) != "undefined" ){
+  callFromCScript();
 }else{
   wShell.Popup( "呼び出し元がわかりません。" );
 }
