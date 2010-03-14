@@ -107,6 +107,13 @@ function readFile( path ){
 
 
 function callFromSakuraEditor(){
+  if(    ! pathExists( "envPath" , "file" )
+      || ! pathExists( "macroDir", "folder" )
+      || ! pathExists( "asfHome" , "folder" )
+  ){
+    return;
+  }
+
   var selectedStr = GetSelectedString(0);
   var fso = new ActiveXObject( "Scripting.FileSystemObject" );
   if( fso.FileExists( tempFileSrc  ) ){ fso.GetFile( tempFileSrc  ).Delete(); }
