@@ -73,7 +73,7 @@ class AnbtSql
       @_type = type
       @string = string
 
-      @pos ||= -1
+      @pos = pos || -1
     end
   end
 end

@@ -53,6 +53,25 @@ class TestAnbtSqlParser < Test::Unit::TestCase
   
   ##
   # コメントと文字列のテストは coarse tokenize で行う。
+  def test_next_sql_token_pos
+    msg = "token pos"
+
+    @parser.before = " "
+    @parser.pos = 0
+    token = @parser.next_sql_token
+    assert_equals(msg,
+                  0, token.pos)
+
+    @parser.before = "a b"
+    @parser.pos = 1
+    token = @parser.next_sql_token
+    assert_equals(msg,
+                  1, token.pos)
+  end
+
+
+  ##
+  # コメントと文字列のテストは coarse tokenize で行う。
   def test_next_sql_token
     msg = "token type recognition"
 
