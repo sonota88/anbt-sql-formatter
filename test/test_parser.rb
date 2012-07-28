@@ -253,6 +253,18 @@ EOB
                    )
 
     ########
+    assert_equals( msg + "minus + non-number", (<<EOB
+<symbol>-</>
+<name>a</>
+EOB
+                   ).strip, Helper.format_tokens( @parser.parse( (<<EOB
+-a
+EOB
+                                                                  ).chop
+                                                                 ))
+                   )
+
+    ########
     assert_equals( msg + "single comment", (<<EOB
 <keyword>select</>
 <space>\n</>

@@ -182,7 +182,7 @@ class AnbtSql
           end
         end
 
-        if @char == "-"
+        if @char == "-" &&
           /^(\d+(\.\d+(e-?\d+)?)?)/ =~ @before[@pos..-1] # float or scientific
           num = $1
           @pos += num.length
