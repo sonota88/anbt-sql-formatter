@@ -78,156 +78,184 @@ class TestAnbtSqlParser < Test::Unit::TestCase
     ########
     @parser.before = " "
     @parser.pos = 0
-    assert_equals( msg + "space",
-                 (<<EOB
-<space> </>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "space",
+      strip_indent(
+        <<-EOB
+        <space> </>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = "a b"
     @parser.pos = 1
-    assert_equals( msg + "space",
-                 (<<EOB
-<space> </>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "space",
+      strip_indent(
+        <<-EOB
+        <space> </>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = ","
     @parser.pos = 0
-    assert_equals( msg + "symbol",
-                 (<<EOB
-<symbol>,</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "symbol",
+      strip_indent(
+        <<-EOB
+        <symbol>,</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = "select"
     @parser.pos = 0
-    assert_equals( msg + "keyword: select",
-                 (<<EOB
-<keyword>select</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "keyword: select",
+      strip_indent(
+        <<-EOB
+        <keyword>select</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = "case"
     @parser.pos = 0
-    assert_equals( msg + "keyword: case", 
-                 (<<EOB
-<keyword>case</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "keyword: case", 
+      strip_indent(
+        <<-EOB
+        <keyword>case</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = "xxx123"
     @parser.pos = 0
-    assert_equals( msg + "name", 
-                 (<<EOB
-<name>xxx123</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "name", 
+      strip_indent(
+        <<-EOB
+        <name>xxx123</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = '123'
     @parser.pos = 0
-    assert_equals( msg + "value", 
-                 (<<EOB
-<value>123</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "value", 
+      strip_indent(
+        <<-EOB
+        <value>123</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = '1.23'
     @parser.pos = 0
-    assert_equals( msg + "value", 
-                 (<<EOB
-<value>1.23</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "value", 
+      strip_indent(
+        <<-EOB
+        <value>1.23</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = '-1.23 '
     @parser.pos = 0
-    assert_equals( msg + "value", 
-                 (<<EOB
-<value>-1.23</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "value", 
+      strip_indent(
+        <<-EOB
+        <value>-1.23</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = '1.23e45 '
     @parser.pos = 0
-    assert_equals( msg + "value", 
-                 (<<EOB
-<value>1.23e45</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "value", 
+      strip_indent(
+        <<-EOB
+        <value>1.23e45</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = '1.23e-45 '
     @parser.pos = 0
-    assert_equals( msg + "value", 
-                 (<<EOB
-<value>1.23e-45</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "value", 
+      strip_indent(
+        <<-EOB
+        <value>1.23e-45</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = '-1.23e-45 '
     @parser.pos = 0
-    assert_equals( msg + "value", 
-                 (<<EOB
-<value>-1.23e-45</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "value", 
+      strip_indent(
+        <<-EOB
+        <value>-1.23e-45</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = '0x01 '
     @parser.pos = 0
-    assert_equals( msg + "value", 
-                 (<<EOB
-<value>0x01</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "value", 
+      strip_indent(
+        <<-EOB
+        <value>0x01</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
 
     ########
     @parser.before = '1x'
     @parser.pos = 0
-    assert_equals( msg + "value", 
-                 (<<EOB
-<value>1</>
-EOB
-                  ).chomp,
-                 Helper.format_tokens([ @parser.next_sql_token ])
-                 )
+    assert_equals(
+      msg + "value", 
+      strip_indent(
+        <<-EOB
+        <value>1</>
+        EOB
+      ),
+      Helper.format_tokens([ @parser.next_sql_token ])
+    )
   end
 
 
@@ -235,136 +263,178 @@ EOB
     msg = "parser basic case - "
 
     ########
-    assert_equals( msg + "", (<<EOB
-<keyword>select</>
-<space> </>
-<name>a</>
-<space> </>
-<keyword>from</>
-<space> </>
-<name>b</>
-<symbol>;</>
-EOB
-                   ).strip, Helper.format_tokens( @parser.parse( (<<EOB
-select a from b;
-EOB
-                                                                  ).chop
-                                                                 ))
-                   )
+    assert_equals(
+      msg + "",
+      strip_indent(
+        <<-EOB
+        <keyword>select</>
+        <space> </>
+        <name>a</>
+        <space> </>
+        <keyword>from</>
+        <space> </>
+        <name>b</>
+        <symbol>;</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse( strip_indent(
+        <<-EOB
+        select a from b;
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "minus + non-number", (<<EOB
-<symbol>-</>
-<name>a</>
-EOB
-                   ).strip, Helper.format_tokens( @parser.parse( (<<EOB
--a
-EOB
-                                                                  ).chop
-                                                                 ))
-                   )
+    assert_equals(
+      msg + "minus + non-number",
+      strip_indent(
+        <<-EOB
+        <symbol>-</>
+        <name>a</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse( strip_indent(
+        <<-EOB
+        -a
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "single comment", (<<EOB
-<keyword>select</>
-<space>\n</>
-<comment>-- x</>
-<name>a</>
-<space>\n</>
-EOB
-                   ).strip, Helper.format_tokens( @parser.parse(<<EOB
-select
--- x
-a
-EOB
-                                                                ))
-                   )
+    assert_equals(
+      msg + "single comment",
+      strip_indent(
+        <<-EOB
+        <keyword>select</>
+        <space>\n</>
+        <comment>-- x</>
+        <name>a</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse(strip_indent(
+        <<-EOB
+        select
+        -- x
+        a
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "parenthesis in single quote", (<<EOB
-<value>'()'</>
-EOB
-                   ).strip, Helper.format_tokens( @parser.parse((<<EOB
-'()'
-EOB
-                                                                 ).strip
-                                                                ))
-                   )
+    assert_equals(
+      msg + "parenthesis in single quote",
+      strip_indent(
+        <<-EOB
+        <value>'()'</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse(strip_indent(
+        <<-EOB
+        '()'
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "parenthesis in double quote", (<<EOB
-<name>"()"</>
-EOB
-                   ).strip, Helper.format_tokens( @parser.parse((<<EOB
-"()"
-EOB
-                                                                 ).strip
-                                                                ))
-                   )
+    assert_equals(
+      msg + "parenthesis in double quote",
+      strip_indent(
+        <<-EOB
+        <name>"()"</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse(strip_indent(
+        <<-EOB
+        "()"
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "multiple line comment: 1", (<<EOB
-<name>aa</>
-<comment>/*bb*/</>
-<name>cc</>
-EOB
-                   ).strip, Helper.format_tokens( @parser.parse((<<EOB
-aa/*bb*/cc
-EOB
-                                                                 ).strip
-                                                                ))
-                   )
+    assert_equals(
+      msg + "multiple line comment: 1",
+      strip_indent(
+        <<-EOB
+        <name>aa</>
+        <comment>/*bb*/</>
+        <name>cc</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse(strip_indent(
+        <<-EOB
+        aa/*bb*/cc
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "multiple line comment: 2", (<<EOB
-<name>aa</>
-<comment>/*b
-b*/</>
-<name>cc</>
-EOB
-                   ).strip, Helper.format_tokens( @parser.parse((<<EOB
-aa/*b
-b*/cc
-EOB
-                                                                 ).strip
-                                                                ))
-                   )
+    assert_equals(
+      msg + "multiple line comment: 2",
+      strip_indent(
+        <<-EOB
+        <name>aa</>
+        <comment>/*b
+        b*/</>
+        <name>cc</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse(strip_indent(
+        <<-EOB
+        aa/*b
+        b*/cc
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "invalid paired double quote", (<<EOB
-<name>aa</>
-<name>"bb</>
-EOB
-                   ).strip, Helper.format_tokens( @parser.parse((<<EOB
-aa"bb
-EOB
-                                                                 ).strip
-                                                                ))
-                   )
+    assert_equals(
+      msg + "invalid paired double quote",
+      strip_indent(
+        <<-EOB
+        <name>aa</>
+        <name>"bb</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse(strip_indent(
+        <<-EOB
+        aa"bb
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "multiwords keyword", (<<EOB
-<keyword>group by</>
-EOB
-                   ).strip, Helper.format_tokens( @parser.parse((<<EOB
-group by
-EOB
-                                                                 ).strip
-                                                                ))
-                   )
+    assert_equals(
+      msg + "multiwords keyword",
+      strip_indent(
+        <<-EOB
+        <keyword>group by</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse(strip_indent(
+        <<-EOB
+        group by
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "multiwords keyword 2",
-                   (<<EOB
-<name>a</>
-<space> </>
-<keyword>group by</>
-<space> </>
-<name>B</>
-EOB
-                    ).strip,
-                   Helper.format_tokens( @parser.parse("a group by B") )
-                   )
+    assert_equals(
+      msg + "multiwords keyword 2",
+      strip_indent(
+        <<-EOB
+        <name>a</>
+        <space> </>
+        <keyword>group by</>
+        <space> </>
+        <name>B</>
+        EOB
+      ),
+      Helper.format_tokens( @parser.parse(strip_indent(
+        <<-EOB
+        a group by B
+        EOB
+      )))
+    )
 
   end
 end

@@ -15,3 +15,9 @@ end
 def assert_equals(a,b,c)
   assert_equal(b,c,a)
 end
+
+def strip_indent(text)
+  text.split("\n").map{|line|
+    line.sub(/^ */, "")
+  }.join("\n")
+end

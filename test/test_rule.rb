@@ -16,15 +16,17 @@ class TestAnbtSqlRule < Test::Unit::TestCase
 
     func_name = "TEST_FUNCTION"
     @rule.function_names << func_name
-    assert_equals( msg,
-                 true,
-                 @rule.function?(func_name)
-                 )
+    assert_equals(
+      msg,
+      true,
+      @rule.function?(func_name)
+    )
 
     @rule.function_names.delete(func_name)
-    assert_equals( msg,
-                 false,
-                 @rule.function?(func_name)
-                 )
+    assert_equals(
+      msg,
+      false,
+      @rule.function?(func_name)
+    )
   end
 end

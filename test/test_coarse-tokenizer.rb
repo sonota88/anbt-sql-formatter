@@ -62,78 +62,102 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_tokenize
     msg = "tokenize - "
 
-    assert_equals( msg, (<<EOB
-<plain>aa</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-aa
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <plain>aa</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        aa
+        EOB
+      )))
+    )
                  
     ########
-    assert_equals( msg, (<<EOB
-<plain>aa </>
-<quote_double>"bb"</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-aa "bb"
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <plain>aa </>
+        <quote_double>"bb"</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        aa "bb"
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<plain>aa </>
-<quote_single>'bb'</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-aa 'bb'
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <plain>aa </>
+        <quote_single>'bb'</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        aa 'bb'
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<plain>aa </>
-<comment_single>--bb<br></>
-<plain>cc</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-aa --bb
-cc
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <plain>aa </>
+        <comment_single>--bb<br></>
+        <plain>cc</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        aa --bb
+        cc
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<plain>aa </>
-<comment_multi>/* bb */</>
-<plain> cc</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-aa /* bb */ cc
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <plain>aa </>
+        <comment_multi>/* bb */</>
+        <plain> cc</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        aa /* bb */ cc
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "begin with multiline comment", (<<EOB
-<comment_multi>/* bb */</>
-<plain> cc</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-/* bb */ cc
-EOB
-                                       ).chomp))
-                 )
+    assert_equals(
+      msg + "begin with multiline comment",
+      strip_indent(
+        <<-EOB
+        <comment_multi>/* bb */</>
+        <plain> cc</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        /* bb */ cc
+        EOB
+      )))
+    )
   end
 
 
@@ -141,74 +165,99 @@ EOB
     msg = "string_in_string"
 
     ########
-    assert_equals( msg, (<<EOB
-<quote_double>"aa'bb'cc"</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-"aa'bb'cc"
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <quote_double>"aa'bb'cc"</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        "aa'bb'cc"
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<quote_single>'aa"bb"cc'</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-'aa"bb"cc'
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <quote_single>'aa"bb"cc'</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        'aa"bb"cc'
+        EOB
+      )))
+    )
   end
 
 
   def test_comment_in_comment
     msg = "comment_in_comment - "
-    ########
-    assert_equals( msg, (<<EOB
-<comment_single>--a--b</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
---a--b
-EOB
-                                                        ).chomp))
-                 )
 
     ########
-    assert_equals( msg, (<<EOB
-<comment_single>-- aa /* bb */</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
--- aa /* bb */
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <comment_single>--a--b</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        --a--b
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<comment_multi>/* aa /* bb */</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-/* aa /* bb */
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <comment_single>-- aa /* bb */</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        -- aa /* bb */
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<comment_single>-- aa /* bb */</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
--- aa /* bb */
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <comment_multi>/* aa /* bb */</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        /* aa /* bb */
+        EOB
+      )))
+    )
+
+    ########
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <comment_single>-- aa /* bb */</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        -- aa /* bb */
+        EOB
+      )))
+    )
   end
 
 
@@ -216,48 +265,64 @@ EOB
     msg = "string_in_comment - "
 
     ########
-    assert_equals( msg, (<<EOB
-<comment_single>-- aa "bb" cc</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
--- aa "bb" cc
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <comment_single>-- aa "bb" cc</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        -- aa "bb" cc
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<comment_single>-- aa 'bb' cc</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
--- aa 'bb' cc
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <comment_single>-- aa 'bb' cc</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        -- aa 'bb' cc
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<comment_multi>/* aa "bb" cc */</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-/* aa "bb" cc */
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <comment_multi>/* aa "bb" cc */</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        /* aa "bb" cc */
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<comment_multi>/* aa 'bb' cc */</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-/* aa 'bb' cc */
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <comment_multi>/* aa 'bb' cc */</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        /* aa 'bb' cc */
+        EOB
+      )))
+    )
   end
   
 
@@ -265,48 +330,64 @@ EOB
     msg = "comment_in_string - "
 
     ########
-    assert_equals( msg + "comment_single in quote_single", (<<EOB
-<quote_single>'aa--bb'</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-'aa--bb'
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg + "comment_single in quote_single",
+      strip_indent(
+        <<-EOB
+        <quote_single>'aa--bb'</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        'aa--bb'
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "comment_single in quote_double", (<<EOB
-<quote_double>"aa--bb"</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-"aa--bb"
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg + "comment_single in quote_double",
+      strip_indent(
+        <<-EOB
+        <quote_double>"aa--bb"</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        "aa--bb"
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "comment_multi in quote_double", (<<EOB
-<quote_double>"aa /* bb */ cc"</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-"aa /* bb */ cc"
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg + "comment_multi in quote_double",
+      strip_indent(
+        <<-EOB
+        <quote_double>"aa /* bb */ cc"</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        "aa /* bb */ cc"
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg + "comment_multi in quote_double", (<<EOB
-<quote_single>'aa /* bb */ cc'</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-'aa /* bb */ cc'
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg + "comment_multi in quote_double",
+      strip_indent(
+        <<-EOB
+        <quote_single>'aa /* bb */ cc'</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        'aa /* bb */ cc'
+        EOB
+      )))
+    )
   end
   
 
@@ -314,47 +395,63 @@ EOB
     msg = "string_escape"
 
     ########
-    assert_equals( msg, (<<EOB
-<quote_double>"_a_\\\\_b_<br>_c_\\'_d_"</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-"_a_\\\\_b_\n_c_\\'_d_"
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <quote_double>"_a_\\\\_b_<br>_c_\\'_d_"</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        "_a_\\\\_b_\n_c_\\'_d_"
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<quote_single>'_a_\\\\_b_<br>_c_\\'_d_'</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-'_a_\\\\_b_\n_c_\\'_d_'
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <quote_single>'_a_\\\\_b_<br>_c_\\'_d_'</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        '_a_\\\\_b_\n_c_\\'_d_'
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<quote_double>"_a_""_b_"</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-"_a_""_b_"
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <quote_double>"_a_""_b_"</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        "_a_""_b_"
+        EOB
+      )))
+    )
 
     ########
-    assert_equals( msg, (<<EOB
-<quote_single>'_a_''_b_'</>
-EOB
-                  ).chomp,
-                 format(@tok.tokenize((<<EOB
-'_a_''_b_'
-EOB
-                                                        ).chomp))
-                 )
+    assert_equals(
+      msg,
+      strip_indent(
+        <<-EOB
+        <quote_single>'_a_''_b_'</>
+        EOB
+      ),
+      format(@tok.tokenize(strip_indent(
+        <<-EOB
+        '_a_''_b_'
+        EOB
+      )))
+    )
   end
 end
