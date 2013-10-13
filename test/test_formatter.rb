@@ -379,7 +379,7 @@ select
 -- comment
 name
 EOB
-                              )
+                              ).chop
                    )
 
     ########
@@ -393,7 +393,7 @@ EOB
 --a
 b
 EOB
-                               )
+                               ).chop
                    );
 
     ########
@@ -408,7 +408,7 @@ EOB
                    @fmt.format(<<EOB
 a;b
 EOB
-                               )
+                               ).chop
                    );
 
     ########
