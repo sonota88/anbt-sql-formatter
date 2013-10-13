@@ -1,3 +1,4 @@
+class AnbtSql
 class Stack
   include Enumerable
 
@@ -22,6 +23,7 @@ class Stack
   def pop
     @arr.pop
   end
+end
 end
 
 
