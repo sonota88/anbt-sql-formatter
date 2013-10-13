@@ -9,14 +9,16 @@ class CoarseTokenizer
 end
 
 
-def format(tokens)
-  tokens.map{|t| t.to_s }.join("\n")
-end
-
 
 class TestCoarseTokenizer < Test::Unit::TestCase
   def setup
     @tok = CoarseTokenizer.new
+  end
+
+  def _format(tokens)
+    tokens.map{|t|
+      "#{t._type} (#{t.string})"
+    }.join("\n")
   end
 
   
@@ -66,10 +68,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <plain>aa</>
+        plain (aa)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         aa
         EOB
@@ -81,11 +83,11 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <plain>aa </>
-        <quote_double>"bb"</>
+        plain (aa )
+        quote_double ("bb")
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         aa "bb"
         EOB
@@ -97,11 +99,11 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <plain>aa </>
-        <quote_single>'bb'</>
+        plain (aa )
+        quote_single ('bb')
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         aa 'bb'
         EOB
@@ -113,12 +115,12 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <plain>aa </>
-        <comment_single>--bb<br></>
-        <plain>cc</>
+        plain (aa )
+        comment_single (--bb\n)
+        plain (cc)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         aa --bb
         cc
@@ -131,12 +133,12 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <plain>aa </>
-        <comment_multi>/* bb */</>
-        <plain> cc</>
+        plain (aa )
+        comment_multi (/* bb */)
+        plain ( cc)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         aa /* bb */ cc
         EOB
@@ -148,11 +150,11 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg + "begin with multiline comment",
       strip_indent(
         <<-EOB
-        <comment_multi>/* bb */</>
-        <plain> cc</>
+        comment_multi (/* bb */)
+        plain ( cc)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         /* bb */ cc
         EOB
@@ -169,10 +171,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <quote_double>"aa'bb'cc"</>
+        quote_double ("aa'bb'cc")
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         "aa'bb'cc"
         EOB
@@ -184,10 +186,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <quote_single>'aa"bb"cc'</>
+        quote_single ('aa"bb"cc')
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         'aa"bb"cc'
         EOB
@@ -204,10 +206,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <comment_single>--a--b</>
+        comment_single (--a--b)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         --a--b
         EOB
@@ -219,10 +221,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <comment_single>-- aa /* bb */</>
+        comment_single (-- aa /* bb */)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         -- aa /* bb */
         EOB
@@ -234,10 +236,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <comment_multi>/* aa /* bb */</>
+        comment_multi (/* aa /* bb */)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         /* aa /* bb */
         EOB
@@ -249,10 +251,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <comment_single>-- aa /* bb */</>
+        comment_single (-- aa /* bb */)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         -- aa /* bb */
         EOB
@@ -269,10 +271,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <comment_single>-- aa "bb" cc</>
+        comment_single (-- aa "bb" cc)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         -- aa "bb" cc
         EOB
@@ -284,10 +286,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <comment_single>-- aa 'bb' cc</>
+        comment_single (-- aa 'bb' cc)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         -- aa 'bb' cc
         EOB
@@ -299,10 +301,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <comment_multi>/* aa "bb" cc */</>
+        comment_multi (/* aa "bb" cc */)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         /* aa "bb" cc */
         EOB
@@ -314,10 +316,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <comment_multi>/* aa 'bb' cc */</>
+        comment_multi (/* aa 'bb' cc */)
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         /* aa 'bb' cc */
         EOB
@@ -334,10 +336,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg + "comment_single in quote_single",
       strip_indent(
         <<-EOB
-        <quote_single>'aa--bb'</>
+        quote_single ('aa--bb')
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         'aa--bb'
         EOB
@@ -349,10 +351,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg + "comment_single in quote_double",
       strip_indent(
         <<-EOB
-        <quote_double>"aa--bb"</>
+        quote_double ("aa--bb")
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         "aa--bb"
         EOB
@@ -364,10 +366,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg + "comment_multi in quote_double",
       strip_indent(
         <<-EOB
-        <quote_double>"aa /* bb */ cc"</>
+        quote_double ("aa /* bb */ cc")
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         "aa /* bb */ cc"
         EOB
@@ -379,10 +381,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg + "comment_multi in quote_double",
       strip_indent(
         <<-EOB
-        <quote_single>'aa /* bb */ cc'</>
+        quote_single ('aa /* bb */ cc')
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         'aa /* bb */ cc'
         EOB
@@ -399,10 +401,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <quote_double>"_a_\\\\_b_<br>_c_\\'_d_"</>
+        quote_double ("_a_\\\\_b_\n_c_\\'_d_")
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         "_a_\\\\_b_\n_c_\\'_d_"
         EOB
@@ -414,10 +416,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <quote_single>'_a_\\\\_b_<br>_c_\\'_d_'</>
+        quote_single ('_a_\\\\_b_\n_c_\\'_d_')
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         '_a_\\\\_b_\n_c_\\'_d_'
         EOB
@@ -429,10 +431,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <quote_double>"_a_""_b_"</>
+        quote_double ("_a_""_b_")
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         "_a_""_b_"
         EOB
@@ -444,10 +446,10 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        <quote_single>'_a_''_b_'</>
+        quote_single ('_a_''_b_')
         EOB
       ),
-      format(@tok.tokenize(strip_indent(
+      _format(@tok.tokenize(strip_indent(
         <<-EOB
         '_a_''_b_'
         EOB

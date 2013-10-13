@@ -18,6 +18,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
     @parser = AnbtSql::Parser.new(AnbtSql::Rule.new)
   end
 
+  def _format(tokens)
+    Helper.format_tokens(tokens)
+  end
+
 
   def test_space?
     msg = "space? - "
@@ -82,10 +86,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "space",
       strip_indent(
         <<-EOB
-        <space> </>
+        space ( )
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -95,10 +99,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "space",
       strip_indent(
         <<-EOB
-        <space> </>
+        space ( )
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -108,10 +112,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "symbol",
       strip_indent(
         <<-EOB
-        <symbol>,</>
+        symbol (,)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -121,10 +125,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "keyword: select",
       strip_indent(
         <<-EOB
-        <keyword>select</>
+        keyword (select)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -134,10 +138,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "keyword: case", 
       strip_indent(
         <<-EOB
-        <keyword>case</>
+        keyword (case)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -147,10 +151,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "name", 
       strip_indent(
         <<-EOB
-        <name>xxx123</>
+        name (xxx123)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -160,10 +164,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "value", 
       strip_indent(
         <<-EOB
-        <value>123</>
+        value (123)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -173,10 +177,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "value", 
       strip_indent(
         <<-EOB
-        <value>1.23</>
+        value (1.23)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -186,10 +190,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "value", 
       strip_indent(
         <<-EOB
-        <value>-1.23</>
+        value (-1.23)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -199,10 +203,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "value", 
       strip_indent(
         <<-EOB
-        <value>1.23e45</>
+        value (1.23e45)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -212,10 +216,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "value", 
       strip_indent(
         <<-EOB
-        <value>1.23e-45</>
+        value (1.23e-45)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -225,10 +229,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "value", 
       strip_indent(
         <<-EOB
-        <value>-1.23e-45</>
+        value (-1.23e-45)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -238,10 +242,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "value", 
       strip_indent(
         <<-EOB
-        <value>0x01</>
+        value (0x01)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
 
     ########
@@ -251,10 +255,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "value", 
       strip_indent(
         <<-EOB
-        <value>1</>
+        value (1)
         EOB
       ),
-      Helper.format_tokens([ @parser.next_sql_token ])
+      _format([ @parser.next_sql_token ])
     )
   end
 
@@ -267,17 +271,17 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "",
       strip_indent(
         <<-EOB
-        <keyword>select</>
-        <space> </>
-        <name>a</>
-        <space> </>
-        <keyword>from</>
-        <space> </>
-        <name>b</>
-        <symbol>;</>
+        keyword (select)
+        space ( )
+        name (a)
+        space ( )
+        keyword (from)
+        space ( )
+        name (b)
+        symbol (;)
         EOB
       ),
-      Helper.format_tokens( @parser.parse( strip_indent(
+      _format( @parser.parse( strip_indent(
         <<-EOB
         select a from b;
         EOB
@@ -289,11 +293,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "minus + non-number",
       strip_indent(
         <<-EOB
-        <symbol>-</>
-        <name>a</>
+        symbol (-)
+        name (a)
         EOB
       ),
-      Helper.format_tokens( @parser.parse( strip_indent(
+      _format( @parser.parse( strip_indent(
         <<-EOB
         -a
         EOB
@@ -305,13 +309,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "single comment",
       strip_indent(
         <<-EOB
-        <keyword>select</>
-        <space>\n</>
-        <comment>-- x</>
-        <name>a</>
+        keyword (select)
+        space (\n)
+        comment (-- x)
+        name (a)
         EOB
       ),
-      Helper.format_tokens( @parser.parse(strip_indent(
+      _format( @parser.parse(strip_indent(
         <<-EOB
         select
         -- x
@@ -325,10 +329,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "parenthesis in single quote",
       strip_indent(
         <<-EOB
-        <value>'()'</>
+        value ('()')
         EOB
       ),
-      Helper.format_tokens( @parser.parse(strip_indent(
+      _format( @parser.parse(strip_indent(
         <<-EOB
         '()'
         EOB
@@ -340,10 +344,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "parenthesis in double quote",
       strip_indent(
         <<-EOB
-        <name>"()"</>
+        name ("()")
         EOB
       ),
-      Helper.format_tokens( @parser.parse(strip_indent(
+      _format( @parser.parse(strip_indent(
         <<-EOB
         "()"
         EOB
@@ -355,12 +359,12 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "multiple line comment: 1",
       strip_indent(
         <<-EOB
-        <name>aa</>
-        <comment>/*bb*/</>
-        <name>cc</>
+        name (aa)
+        comment (/*bb*/)
+        name (cc)
         EOB
       ),
-      Helper.format_tokens( @parser.parse(strip_indent(
+      _format( @parser.parse(strip_indent(
         <<-EOB
         aa/*bb*/cc
         EOB
@@ -372,13 +376,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "multiple line comment: 2",
       strip_indent(
         <<-EOB
-        <name>aa</>
-        <comment>/*b
-        b*/</>
-        <name>cc</>
+        name (aa)
+        comment (/*b
+        b*/)
+        name (cc)
         EOB
       ),
-      Helper.format_tokens( @parser.parse(strip_indent(
+      _format( @parser.parse(strip_indent(
         <<-EOB
         aa/*b
         b*/cc
@@ -391,11 +395,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "invalid paired double quote",
       strip_indent(
         <<-EOB
-        <name>aa</>
-        <name>"bb</>
+        name (aa)
+        name ("bb)
         EOB
       ),
-      Helper.format_tokens( @parser.parse(strip_indent(
+      _format( @parser.parse(strip_indent(
         <<-EOB
         aa"bb
         EOB
@@ -407,10 +411,10 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "multiwords keyword",
       strip_indent(
         <<-EOB
-        <keyword>group by</>
+        keyword (group by)
         EOB
       ),
-      Helper.format_tokens( @parser.parse(strip_indent(
+      _format( @parser.parse(strip_indent(
         <<-EOB
         group by
         EOB
@@ -422,14 +426,14 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "multiwords keyword 2",
       strip_indent(
         <<-EOB
-        <name>a</>
-        <space> </>
-        <keyword>group by</>
-        <space> </>
-        <name>B</>
+        name (a)
+        space ( )
+        keyword (group by)
+        space ( )
+        name (B)
         EOB
       ),
-      Helper.format_tokens( @parser.parse(strip_indent(
+      _format( @parser.parse(strip_indent(
         <<-EOB
         a group by B
         EOB

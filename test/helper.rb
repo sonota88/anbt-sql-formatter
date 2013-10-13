@@ -6,7 +6,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..", "lib")
 class Helper
   def Helper.format_tokens(list)
     list.map{|token|
-      "<#{token._type}>#{token.string}</>"
+      "#{token._type} (#{token.string})"
     }.join("\n")
   end
 end

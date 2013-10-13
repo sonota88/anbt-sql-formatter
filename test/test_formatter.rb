@@ -16,6 +16,9 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     @fmt = AnbtSql::Formatter.new(@rule)
   end
 
+  def _format(tokens)
+    Helper.format_tokens(tokens)
+  end
 
   def test_modify_keyword_case
     msg = "upcase"
@@ -29,10 +32,10 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "",
       strip_indent(
         <<-EOB
-        <keyword>SELECT</>
+        keyword (SELECT)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
     ########
@@ -45,10 +48,10 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "",
       strip_indent(
         <<-EOB
-        <keyword>select</>
+        keyword (select)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
   end
 
@@ -63,11 +66,11 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "length is less than 3, should do nothing",
       strip_indent(
         <<-EOB
-        <name>a</>
-        <symbol>+</>
+        name (a)
+        symbol (+)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
     ########
@@ -77,10 +80,10 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "",
       strip_indent(
         <<-EOB
-        <symbol>(+)</>
+        symbol ((+))
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
     ########
@@ -90,10 +93,10 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "format_list()",
     strip_indent(
         <<-EOB
-        <symbol>(+)</>
+        symbol ((+))
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
   end
 
@@ -108,12 +111,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "",
       strip_indent(
         <<-EOB
-        <name>a</>
-        <symbol>(</>
-        <name>b</>
+        name (a)
+        symbol (()
+        name (b)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
 
@@ -123,12 +126,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     assert_equals(
       msg + "", strip_indent(
         <<-EOB
-        <name>a</>
-        <symbol>(</>
-        <name>b</>
+        name (a)
+        symbol (()
+        name (b)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
 
@@ -139,12 +142,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "",
       strip_indent(
         <<-EOB
-        <name>a</>
-        <symbol>(</>
-        <name>b</>
+        name (a)
+        symbol (()
+        name (b)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
   end
  
@@ -159,10 +162,10 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "one element, should not separate",
       strip_indent(
         <<-EOB
-        <symbol>(1)</>
+        symbol ((1))
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
 
@@ -173,14 +176,14 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "more than one element, should separate",
       strip_indent(
         <<-EOB
-        <symbol>(</>
-        <value>1</>
-        <symbol>,</>
-        <value>2</>
-        <symbol>)</>
+        symbol (()
+        value (1)
+        symbol (,)
+        value (2)
+        symbol ())
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
   end
  
@@ -194,12 +197,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     assert_equals(msg,
       strip_indent(
         <<-EOB
-        <name>a</>
-        <space> </>
-        <symbol>=</>
+        name (a)
+        space ( )
+        symbol (=)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
   
     ########
@@ -208,12 +211,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     assert_equals(msg,
       strip_indent(
         <<-EOB
-        <symbol>=</>
-        <space> </>
-        <name>b</>
+        symbol (=)
+        space ( )
+        name (b)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
   end
 
@@ -230,12 +233,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "before",
       strip_indent(
         <<-EOB
-        <name>foo</>
-        <space> </>
-        <name>bar</>
+        name (foo)
+        space ( )
+        name (bar)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
     
     result = @fmt.insert_return_and_indent(tokens, index, indent_depth)
@@ -244,12 +247,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "index: #{index} / indent depth: #{indent_depth}",
       strip_indent(
         <<-EOB
-        <name>foo</>
-        <space>\n#{INDENT_STR}</>
-        <name>bar</>
+        name (foo)
+        space (\n#{INDENT_STR})
+        name (bar)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
     ########
@@ -262,12 +265,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "before",
       strip_indent(
         <<-EOB
-        <keyword>select</>
-        <space> </>
-        <name>foo</>
+        keyword (select)
+        space ( )
+        name (foo)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
     
     result = @fmt.insert_return_and_indent(tokens, index, indent_depth)
@@ -276,12 +279,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "#{msg}: index: #{index} / indent depth: #{indent_depth}",
       strip_indent(
         <<-EOB
-        <keyword>select</>
-        <space>\n#{INDENT_STR}</>
-        <name>foo</>
+        keyword (select)
+        space (\n#{INDENT_STR})
+        name (foo)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
     ########
@@ -293,12 +296,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "before",
       strip_indent(
         <<-EOB
-        <keyword>select</>
-        <space> </>
-        <name>foo</>
+        keyword (select)
+        space ( )
+        name (foo)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
     
     result = @fmt.insert_return_and_indent(tokens, index, indent_depth)
@@ -309,12 +312,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "#{msg}: index: #{index} / indent depth: #{indent_depth}",
       strip_indent(
         <<-EOB
-        <keyword>select</>
-        <space>\n#{INDENT_STR}</>
-        <name>foo</>
+        keyword (select)
+        space (\n#{INDENT_STR})
+        name (foo)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
     ########
@@ -326,12 +329,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "before",
       strip_indent(
         <<-EOB
-        <name>foo</>
-        <space> </>
-        <name>bar</>
+        name (foo)
+        space ( )
+        name (bar)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
     
     result = @fmt.insert_return_and_indent(tokens, index, indent_depth)
@@ -340,12 +343,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "#{msg}: index: #{index} / indent depth: #{indent_depth}",
       strip_indent(
         <<-EOB
-        <name>foo</>
-        <space>\n#{INDENT_STR}#{INDENT_STR}</>
-        <name>bar</>
+        name (foo)
+        space (\n#{INDENT_STR}#{INDENT_STR})
+        name (bar)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
     ########
@@ -356,12 +359,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       msg + "",
       strip_indent(
         <<-EOB
-        <keyword>select</>
-        <space>\n</>
-        <keyword>case</>
+        keyword (select)
+        space (\n)
+        keyword (case)
         EOB
       ),
-      Helper.format_tokens(tokens)
+      _format(tokens)
     )
 
     ########
@@ -383,7 +386,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
         ;
         EOB
       ),
-#       Helper.format_tokens(tokens),
+#       _format(tokens),
       @fmt.format("SELECT aa ,bb ,cc ,dd ,ee FROM foo;")
     )
 =end
@@ -533,8 +536,8 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     statements = @fmt.split_by_semicolon(tokens)
     assert_equals(
       msg,
-      "<name>a</>",
-      Helper.format_tokens( statements[0] )
+      "name (a)",
+      _format( statements[0] )
     )
     assert_equals(
       msg,
@@ -552,8 +555,8 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     )
     assert_equals(
       msg,
-      "<name>a</>",
-      Helper.format_tokens( statements[1] )
+      "name (a)",
+      _format( statements[1] )
     )
 
     ########
@@ -561,13 +564,13 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     statements = @fmt.split_by_semicolon(tokens)
     assert_equals(
       msg,
-      "<name>a</>",
-      Helper.format_tokens( statements[0] )
+      "name (a)",
+      _format( statements[0] )
     )
     assert_equals(
       msg,
-      "<name>b</>",
-      Helper.format_tokens( statements[1] )
+      "name (b)",
+      _format( statements[1] )
     )
   end
 end
