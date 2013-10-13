@@ -56,14 +56,7 @@ class AnbtSql
     # @return:: バリューオブジェクトの文字列表現。
     #
     def to_s
-      buf = ""
-      buf << "AbstractAnbtSqlToken["
-      buf << "_type="   + @_type
-      buf << ",string=" + @string
-      buf << ",pos="    + @pos
-      buf << "]"
-      
-      buf
+      @string
     end
   end
 

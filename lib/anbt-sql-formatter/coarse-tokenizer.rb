@@ -15,7 +15,7 @@ class CoarseToken
   end
 
   def to_s
-    %Q!<#{@_type}>%s</>! % [@string.gsub("\n", "<br>")]
+    @string
   end
 end
 
