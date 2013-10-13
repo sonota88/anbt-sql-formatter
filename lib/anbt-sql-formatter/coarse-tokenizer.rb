@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require "pp"
-
 =begin
 エスケープ文字
 =end

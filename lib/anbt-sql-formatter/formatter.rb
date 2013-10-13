@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require "pp"
-
 require "anbt-sql-formatter/rule"
 require "anbt-sql-formatter/parser"
 require "anbt-sql-formatter/exception"

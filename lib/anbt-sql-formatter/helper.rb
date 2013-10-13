@@ -1,5 +1,3 @@
-require "pp"
-
 class Stack
   include Enumerable
 

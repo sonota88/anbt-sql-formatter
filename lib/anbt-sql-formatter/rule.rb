@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require "pp"
-
 =begin
 AnbtSqlFormatter: SQL整形ツール. SQL文を決められたルールに従い整形します。
 

@@ -12,8 +12,6 @@ BlancoSqlFormatterException : SQL整形ツールの例外を表します。
 @author sonota (2009-11-xx)
 =end
 
-require "pp"
-
 
 class AnbtSql
   class FormatterException < IOError

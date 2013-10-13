@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-require "pp"
-
 class AnbtSql
   class TokenConstants
 
