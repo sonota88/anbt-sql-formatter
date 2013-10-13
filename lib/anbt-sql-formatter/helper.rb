@@ -29,11 +29,11 @@ end
 
 class String
   def endsWith(c)
-    self[-1] == c ? true : false
+    self.end_with? c
   end
 
   def startsWith(c)
-    self[0] == c ? true : false
+    self.start_with? c
   end
 
   def charAt(n)

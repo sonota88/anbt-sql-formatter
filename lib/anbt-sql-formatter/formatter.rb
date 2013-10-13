@@ -359,13 +359,6 @@ class AnbtSql
       begin
         # 挿入する文字列を作成する。
         s = "\n"
-        # もし１つ前にシングルラインコメントがあるなら、改行は不要。
-        prevToken = tokens.get(index - 1)
-
-        if (prevToken._type == AnbtSql::TokenConstants::COMMENT &&
-            prevToken.string.startsWith("--")) 
-          s = ""
-        end
         
         # インデントをつける。
         indent = 0 if indent < 0 ## Java版と異なる
