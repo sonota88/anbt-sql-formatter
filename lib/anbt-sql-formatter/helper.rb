@@ -1,29 +1,29 @@
 class AnbtSql
-class Stack
-  include Enumerable
+  class Stack
+    include Enumerable
 
-  def initialize
-    @arr = []
-  end
+    def initialize
+      @arr = []
+    end
 
-  def each
-    @arr.each{|item|
-      yield item
-    }
-  end
+    def each
+      @arr.each{|item|
+        yield item
+      }
+    end
 
-  def clear
-    @arr.clear
-  end
+    def clear
+      @arr.clear
+    end
 
-  def push(o)
-    @arr.push o
-  end
+    def push(o)
+      @arr.push o
+    end
 
-  def pop
-    @arr.pop
+    def pop
+      @arr.pop
+    end
   end
-end
 end
 
 
