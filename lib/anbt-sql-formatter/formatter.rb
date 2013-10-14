@@ -115,8 +115,8 @@ class AnbtSql
       prevToken = nil
 
       (tokens.size - 1).downto(1){|index|
-        token     = tokens.get(index)
-        prevToken = tokens.get(index - 1)
+        token     = ArrayUtil.get(tokens, index)
+        prevToken = ArrayUtil.get(tokens, index - 1)
 
         if (token._type == AnbtSql::TokenConstants::SPACE &&
             (prevToken._type == AnbtSql::TokenConstants::SYMBOL ||
@@ -138,8 +138,8 @@ class AnbtSql
 
       # Length of tokens changes in loop!
       while index < tokens.size
-        prev  = tokens.get(index - 1)
-        token = tokens.get(index    )
+        prev  = ArrayUtil.get(tokens, index - 1)
+        token = ArrayUtil.get(tokens, index    )
 
         if (prev._type  != AnbtSql::TokenConstants::SPACE &&
             token._type != AnbtSql::TokenConstants::SPACE) 
@@ -178,7 +178,7 @@ class AnbtSql
       index = 0
       # Length of tokens changes in loop!
       while index < tokens.size
-        token = tokens.get(index)
+        token = ArrayUtil.get(tokens, index)
         
         if token._type == AnbtSql::TokenConstants::SYMBOL # ****
 
@@ -295,11 +295,11 @@ class AnbtSql
       (tokens.size - 1).downto(4).each{|index|
         next if (index >= tokens.size()) 
 
-        t0 = tokens.get(index    )
-        t1 = tokens.get(index - 1)
-        t2 = tokens.get(index - 2)
-        t3 = tokens.get(index - 3)
-        t4 = tokens.get(index - 4)
+        t0 = ArrayUtil.get(tokens, index    )
+        t1 = ArrayUtil.get(tokens, index - 1)
+        t2 = ArrayUtil.get(tokens, index - 2)
+        t3 = ArrayUtil.get(tokens, index - 3)
+        t4 = ArrayUtil.get(tokens, index - 4)
 
         if (equals_ignore_case(t4.string      , "(") &&
             equals_ignore_case(t3.string.strip, "" ) &&
@@ -321,13 +321,13 @@ class AnbtSql
       # SQLの前後に空白があったら削除する。
       # Delete space token at first and last of SQL tokens.
 
-      token = tokens.get(0)
+      token = ArrayUtil.get(tokens, 0)
       if (token._type == AnbtSql::TokenConstants::SPACE)
         tokens.remove(0)
       end
       return [] if tokens.empty?
       
-      token = tokens.get(tokens.size() - 1)
+      token = ArrayUtil.get(tokens, tokens.size() - 1)
       if token._type == AnbtSql::TokenConstants::SPACE
         tokens.remove(tokens.size() - 1)
       end
@@ -367,13 +367,13 @@ class AnbtSql
         s += @rule.indent_string * indent
 
         # 前後にすでにスペースがあれば、それを置き換える。
-        token = tokens.get(index)
+        token = ArrayUtil.get(tokens, index)
         if token._type == AnbtSql::TokenConstants::SPACE
           token.string = s
           return 0
         end
 
-        token = tokens.get(index - 1)
+        token = ArrayUtil.get(tokens, index - 1)
         if token._type == AnbtSql::TokenConstants::SPACE
           token.string = s
           return 0

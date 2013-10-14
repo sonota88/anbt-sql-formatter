@@ -43,18 +43,18 @@ class AnbtSql
     def self.remove(ary, n)
       ary.delete_at n
     end
+
+    def self.get(ary, n)
+      if n < 0 || ary.size - 1 < n
+        raise IndexOutOfBoundsException
+      end
+
+      ary[n]
+    end
   end
 end
 
 class Array
-
-  def get(n)
-    if n >= self.size || n <= -1
-      raise IndexOutOfBoundsException
-    end
-
-    self[n]
-  end
 
   def add(n,o)
     self.insert(n,o)
