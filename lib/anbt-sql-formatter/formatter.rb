@@ -301,10 +301,10 @@ class AnbtSql
         t3 = tokens.get(index - 3)
         t4 = tokens.get(index - 4)
 
-        if (equals_ignore_case(t4.string     , "(") &&
+        if (equals_ignore_case(t4.string      , "(") &&
             equals_ignore_case(t3.string.strip, "" ) &&
             equals_ignore_case(t1.string.strip, "" ) && 
-            equals_ignore_case(t0.string     , ")")   )
+            equals_ignore_case(t0.string      , ")")   )
           t4.string = t4.string + t2.string + t0.string
           tokens.remove(index    )
           tokens.remove(index - 1)
