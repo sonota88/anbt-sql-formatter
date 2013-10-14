@@ -323,13 +323,13 @@ class AnbtSql
 
       token = ArrayUtil.get(tokens, 0)
       if (token._type == AnbtSql::TokenConstants::SPACE)
-        tokens.remove(0)
+        ArrayUtil.remove(tokens, 0)
       end
       return [] if tokens.empty?
       
       token = ArrayUtil.get(tokens, tokens.size() - 1)
       if token._type == AnbtSql::TokenConstants::SPACE
-        tokens.remove(tokens.size() - 1)
+        ArrayUtil.remove(tokens, tokens.size() - 1)
       end
       return [] if tokens.empty?
 
