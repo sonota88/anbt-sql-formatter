@@ -38,12 +38,15 @@ class AnbtSql
       str_a.casecmp(str_b) == 0
     end
   end
+
+  module ArrayUtil
+    def self.remove(ary, n)
+      ary.delete_at n
+    end
+  end
 end
 
 class Array
-  def remove(n)
-    self.delete_at n
-  end
 
   def get(n)
     if n >= self.size || n <= -1

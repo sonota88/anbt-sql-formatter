@@ -103,8 +103,8 @@ class AnbtSql
             tokens[index + 1].string == "+" &&
             tokens[index + 2].string == ")") 
           tokens[index].string = "(+)"
-          tokens.remove(index + 1)
-          tokens.remove(index + 1)
+          ArrayUtil.remove(tokens, index + 1)
+          ArrayUtil.remove(tokens, index + 1)
         end
         index += 1
       end
@@ -121,11 +121,11 @@ class AnbtSql
         if (token._type == AnbtSql::TokenConstants::SPACE &&
             (prevToken._type == AnbtSql::TokenConstants::SYMBOL ||
              prevToken._type == AnbtSql::TokenConstants::COMMENT))
-          tokens.remove(index)
+          ArrayUtil.remove(tokens, index)
         elsif ((token._type == AnbtSql::TokenConstants::SYMBOL ||
                 token._type == AnbtSql::TokenConstants::COMMENT) &&
                prevToken._type == AnbtSql::TokenConstants::SPACE)
-          tokens.remove(index - 1)
+          ArrayUtil.remove(tokens, index - 1)
         elsif (token._type == AnbtSql::TokenConstants::SPACE)
           token.string = " "
         end
@@ -306,10 +306,10 @@ class AnbtSql
             equals_ignore_case(t1.string.strip, "" ) && 
             equals_ignore_case(t0.string      , ")")   )
           t4.string = t4.string + t2.string + t0.string
-          tokens.remove(index    )
-          tokens.remove(index - 1)
-          tokens.remove(index - 2)
-          tokens.remove(index - 3)
+          ArrayUtil.remove(tokens, index    )
+          ArrayUtil.remove(tokens, index - 1)
+          ArrayUtil.remove(tokens, index - 2)
+          ArrayUtil.remove(tokens, index - 3)
         end
       }
     end
