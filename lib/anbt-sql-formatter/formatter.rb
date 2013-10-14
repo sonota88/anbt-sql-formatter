@@ -49,7 +49,7 @@ class AnbtSql
       @function_bracket.clear()
       begin
         isSqlEndsWithNewLine = false
-        if sql_str.endsWith("\n")
+        if sql_str.end_with?("\n")
           isSqlEndsWithNewLine = true
         end
         
@@ -153,7 +153,7 @@ class AnbtSql
           # 関数名の後ろにはスペースは入れない
           # no space after function name
           if (@rule.function?(prev.string) &&
-              token.string.equals("(")) 
+              token.string == "(")
             index += 1 ; next
           end
           
@@ -272,10 +272,10 @@ class AnbtSql
 
         elsif (token._type == AnbtSql::TokenConstants::COMMENT) # ****
 
-          if token.string.startsWith("/*")
+          if token.string.start_with?("/*")
             # マルチラインコメントの後に改行を入れる。
             index += insert_return_and_indent(tokens, index + 1, indent)
-          elsif /^--/ =~ token.string
+          elsif token.string.start_with?("--")
             index += insert_return_and_indent(tokens, index + 1, indent)
           end
         end
@@ -302,8 +302,8 @@ class AnbtSql
         t4 = tokens.get(index - 4)
 
         if (equals_ignore_case(t4.string     , "(") &&
-            equals_ignore_case(t3.string.trim, "" ) &&
-            equals_ignore_case(t1.string.trim, "" ) && 
+            equals_ignore_case(t3.string.strip, "" ) &&
+            equals_ignore_case(t1.string.strip, "" ) && 
             equals_ignore_case(t0.string     , ")")   )
           t4.string = t4.string + t2.string + t0.string
           tokens.remove(index    )

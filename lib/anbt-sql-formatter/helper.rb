@@ -40,25 +40,6 @@ class AnbtSql
   end
 end
 
-class String
-  def endsWith(c)
-    self.end_with? c
-  end
-
-  def startsWith(c)
-    self.start_with? c
-  end
-
-  def equals(str)
-    self == str
-  end
-
-  def trim
-    self.strip
-  end
-end
-
-
 class Array
   def remove(n)
     self.delete_at n
