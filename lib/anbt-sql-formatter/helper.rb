@@ -24,8 +24,17 @@ class AnbtSql
       @arr.pop
     end
   end
-end
 
+  module StringUtil
+    def char_at(str, n)
+      if n < 0 || str.size - 1 < n
+        raise IndexOutOfBoundsException
+      end
+
+      str.slice(n, 1)
+    end
+  end
+end
 
 class String
   def endsWith(c)
@@ -34,10 +43,6 @@ class String
 
   def startsWith(c)
     self.start_with? c
-  end
-
-  def charAt(n)
-    self[n..n]
   end
 
   def equals(str)

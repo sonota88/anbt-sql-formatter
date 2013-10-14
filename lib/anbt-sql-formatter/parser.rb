@@ -10,6 +10,8 @@ require "anbt-sql-formatter/coarse-tokenizer"
 class AnbtSql
   class Parser
 
+    include ::AnbtSql::StringUtil
+
     def initialize(rule)
       @rule = rule
 
@@ -86,25 +88,26 @@ class AnbtSql
         return nil
       end
       
-      @char = @before.charAt(@pos)
+      @char = char_at(@before, @pos)
 
       if space?(@char)
         workString = ""
         loop { 
           workString += @char
-
-          @char = @before.charAt(@pos+1)
-          if not space?(@char)
+          
+          is_next_char_space = false
+          if @pos + 1 < @before.size &&
+            space?(char_at(@before, @pos+1))
+              is_next_char_space = true
+          end
+          
+          if not is_next_char_space
             @pos += 1
             return AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE,
-                                        workString, start_pos)
-          end
-
-          @pos += 1
-          
-          if @pos >= @before.length()
-            return AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE,
-                                        workString, start_pos)
+                                      workString, start_pos)
+          else
+            @pos += 1
+            next
           end
         }
 
@@ -135,7 +138,7 @@ class AnbtSql
             break
           end
 
-          @char = @before.charAt(@pos)
+          @char = char_at(@before, @pos)
         end
         return AnbtSql::Token.new(AnbtSql::TokenConstants::VALUE,
                                     s, start_pos)
@@ -151,7 +154,7 @@ class AnbtSql
             break
           end
 
-          @char = @before.charAt(@pos)
+          @char = char_at(@before, @pos)
         end
 
         if AnbtSql::Constants::SQL_RESERVED_WORDS.map{|w| w.upcase }.include?(s.upcase)
@@ -171,11 +174,11 @@ class AnbtSql
         end
 
         # ２文字の記号かどうか調べる
-        ch2 = @before.charAt(@pos)
+        ch2 = char_at(@before, @pos)
         #for (int i = 0; i < two_character_symbol.length; i++) {
         for i in 0...@two_character_symbol.length
-          if (@two_character_symbol[i].charAt(0) == @char &&
-              @two_character_symbol[i].charAt(1) == ch2)
+          if (char_at(@two_character_symbol[i], 0) == @char &&
+              char_at(@two_character_symbol[i], 1) == ch2)
             @pos += 1
             s += ch2
             break
