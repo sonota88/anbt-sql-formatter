@@ -51,12 +51,9 @@ class AnbtSql
 
       ary[n]
     end
-  end
-end
 
-class Array
-
-  def add(n,o)
-    self.insert(n,o)
+    def self.add(ary, n, o)
+      ary.insert(n, o)
+    end
   end
 end

@@ -157,7 +157,7 @@ class AnbtSql
             index += 1 ; next
           end
           
-          tokens.add(index,
+          ArrayUtil.add(tokens, index,
                      AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " ")
                      )
         end
@@ -380,7 +380,7 @@ class AnbtSql
         end
 
         # 前後になければ、新たにスペースを追加する。
-        tokens.add(index,
+        ArrayUtil.add(tokens, index,
                    AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, s)
                    )
         return 1
