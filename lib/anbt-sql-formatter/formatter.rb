@@ -9,6 +9,8 @@ require "anbt-sql-formatter/helper" # Stack
 class AnbtSql
   class Formatter
 
+    include StringUtil
+
     @rule = nil
 
     def initialize(rule)
@@ -206,61 +208,61 @@ class AnbtSql
         elsif token._type == AnbtSql::TokenConstants::KEYWORD # ****
 
           # indentを２つ増やし、キーワードの後ろで改行
-          if (token.string.equalsIgnoreCase("DELETE") ||
-              token.string.equalsIgnoreCase("SELECT") ||
-              token.string.equalsIgnoreCase("UPDATE")   )
+          if (equals_ignore_case(token.string, "DELETE") ||
+              equals_ignore_case(token.string, "SELECT") ||
+              equals_ignore_case(token.string, "UPDATE")   )
             indent += 2
             index += insert_return_and_indent(tokens, index + 1, indent, "+2")
           end
 
           # indentを１つ増やし、キーワードの後ろで改行
-          if @rule.kw_plus1_indent_x_nl.any?{ |kw| token.string.equalsIgnoreCase(kw) }
+          if @rule.kw_plus1_indent_x_nl.any?{ |kw| equals_ignore_case(token.string, kw) }
             indent += 1
             index += insert_return_and_indent(tokens, index + 1, indent)
           end
 
           # キーワードの前でindentを１つ減らして改行、キーワードの後ろでindentを戻して改行。
-          if @rule.kw_minus1_indent_nl_x_plus1_indent.any?{ |kw| token.string.equalsIgnoreCase(kw) }
+          if @rule.kw_minus1_indent_nl_x_plus1_indent.any?{ |kw| equals_ignore_case(token.string, kw) }
             index += insert_return_and_indent(tokens, index    , indent - 1)
             index += insert_return_and_indent(tokens, index + 1, indent    )
           end
 
           # キーワードの前でindentを１つ減らして改行、キーワードの後ろでindentを戻して改行。
-          if (token.string.equalsIgnoreCase("VALUES"))
+          if (equals_ignore_case(token.string, "VALUES"))
             indent -= 1
             index += insert_return_and_indent(tokens, index, indent)
           end
 
           # キーワードの前でindentを１つ減らして改行
-          if (token.string.equalsIgnoreCase("END"))
+          if (equals_ignore_case(token.string, "END"))
             indent -= 1
             index += insert_return_and_indent(tokens, index, indent)
           end
 
           # キーワードの前で改行
-          if @rule.kw_nl_x.any?{ |kw| token.string.equalsIgnoreCase(kw) }
+          if @rule.kw_nl_x.any?{ |kw| equals_ignore_case(token.string, kw) }
             index += insert_return_and_indent(tokens, index, indent)
           end
 
           # キーワードの前で改行, インデント+1
-          if @rule.kw_nl_x_plus1_indent.any?{ |kw| token.string.equalsIgnoreCase(kw) }
+          if @rule.kw_nl_x_plus1_indent.any?{ |kw| equals_ignore_case(token.string, kw) }
             index += insert_return_and_indent(tokens, index, indent + 1)
           end
 
           # キーワードの前で改行。indentを強制的に０にする。
-          if (token.string.equalsIgnoreCase("UNION"    ) ||
-              token.string.equalsIgnoreCase("INTERSECT") ||
-              token.string.equalsIgnoreCase("EXCEPT"   )   ) 
+          if (equals_ignore_case(token.string, "UNION"    ) ||
+              equals_ignore_case(token.string, "INTERSECT") ||
+              equals_ignore_case(token.string, "EXCEPT"   )   ) 
             indent -= 2
             index += insert_return_and_indent(tokens, index    , indent)
             index += insert_return_and_indent(tokens, index + 1, indent)
           end
 
-          if token.string.equalsIgnoreCase("BETWEEN")
+          if equals_ignore_case(token.string, "BETWEEN")
             encounterBetween = true
           end
 
-          if token.string.equalsIgnoreCase("AND")
+          if equals_ignore_case(token.string, "AND")
             # BETWEEN のあとのANDは改行しない。
             if not encounterBetween
               index += insert_return_and_indent(tokens, index, indent)
@@ -299,10 +301,10 @@ class AnbtSql
         t3 = tokens.get(index - 3)
         t4 = tokens.get(index - 4)
 
-        if (t4.string.     equalsIgnoreCase("(") &&
-            t3.string.trim.equalsIgnoreCase("" ) &&
-            t1.string.trim.equalsIgnoreCase("" ) && 
-            t0.string.     equalsIgnoreCase(")")   )
+        if (equals_ignore_case(t4.string     , "(") &&
+            equals_ignore_case(t3.string.trim, "" ) &&
+            equals_ignore_case(t1.string.trim, "" ) && 
+            equals_ignore_case(t0.string     , ")")   )
           t4.string = t4.string + t2.string + t0.string
           tokens.remove(index    )
           tokens.remove(index - 1)

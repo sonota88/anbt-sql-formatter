@@ -33,6 +33,10 @@ class AnbtSql
 
       str.slice(n, 1)
     end
+
+    def equals_ignore_case(str_a, str_b)
+      str_a.casecmp(str_b) == 0
+    end
   end
 end
 
@@ -47,10 +51,6 @@ class String
 
   def equals(str)
     self == str
-  end
-
-  def equalsIgnoreCase(other)
-    self.upcase == other.upcase
   end
 
   def trim

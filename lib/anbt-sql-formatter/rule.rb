@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+require "anbt-sql-formatter/helper"
+
 =begin
 AnbtSqlFormatter: SQL整形ツール. SQL文を決められたルールに従い整形します。
 
@@ -17,6 +19,9 @@ http://homepage2.nifty.com/igat/igapyon/diary/2005/ig050613.html
 
 class AnbtSql
   class Rule
+
+    include StringUtil
+
     attr_accessor :keyword, :indent_string, :function_names, :space_after_comma
     attr_accessor :kw_multi_words
 
@@ -108,7 +113,7 @@ class AnbtSql
       end
 
       for i in 0...(@function_names.length)
-        if (@function_names[i].equalsIgnoreCase(name))
+        if (equals_ignore_case(@function_names[i], name))
           return true
         end
       end
