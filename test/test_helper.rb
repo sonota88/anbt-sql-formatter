@@ -14,10 +14,10 @@ class TestAnbtSqlHelper < Test::Unit::TestCase
   def test_array_get
     arr = %w(a b c) # index = 0, 1, 2
     assert_raise(IndexOutOfBoundsException, "値が範囲外なのに例外が発生しない"){
-      arr.get(3)
+      ::AnbtSql::ArrayUtil.get(arr, 3)
     }
     assert_raise(IndexOutOfBoundsException, "値が範囲外なのに例外が発生しない"){
-      arr.get(-1)
+      ::AnbtSql::ArrayUtil.get(arr, -1)
     }
   end
 end
