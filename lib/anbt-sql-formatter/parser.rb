@@ -120,30 +120,15 @@ class AnbtSql
 
       elsif digit?(@char)
         if /^(0x[0-9a-fA-F]+)/       =~ @before[@pos..-1] || # hex
-           /^(\d+(\.\d+(e-?\d+)?)?)/ =~ @before[@pos..-1]    # float or scientific
+           /^(\d+(\.\d+(e-?\d+)?)?)/ =~ @before[@pos..-1]    # integer, float or scientific
           num = $1
           @pos += num.length
           return AnbtSql::Token.new(AnbtSql::TokenConstants::VALUE,
                                     num, start_pos)
+        else
+          raise "must not happen"
         end
 
-        s = ""
-        while (digit?(@char) || @char == '.') 
-          # if (ch == '.') type = Token.REAL
-          s += @char
-          @pos += 1
-
-          if (@pos >= @before.length) 
-            # 長さを超えている場合には処理中断します。
-            break
-          end
-
-          @char = char_at(@before, @pos)
-        end
-        return AnbtSql::Token.new(AnbtSql::TokenConstants::VALUE,
-                                    s, start_pos)
-        
-        
       elsif letter?(@char)
         s = ""
         # 文字列中のドットについては、文字列と一体として考える。
