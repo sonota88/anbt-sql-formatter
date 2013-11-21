@@ -251,12 +251,12 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       msg,
       strip_indent(
         <<-EOB
-        comment_single (-- aa /* bb */)
+        comment_multi (/* aa -- bb */)
         EOB
       ),
       _format(@tok.tokenize(strip_indent(
         <<-EOB
-        -- aa /* bb */
+        /* aa -- bb */
         EOB
       )))
     )
