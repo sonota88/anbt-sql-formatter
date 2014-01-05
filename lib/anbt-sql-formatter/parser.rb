@@ -28,7 +28,7 @@ class AnbtSql
 
       # ２文字からなる記号。
       # なお、|| は文字列結合にあたります。
-      @two_character_symbol = [ "<>", "<=", ">=", "||" ]
+      @two_character_symbol = [ "<>", "<=", ">=", "||", "!=" ]
     end
 
 
@@ -51,7 +51,7 @@ class AnbtSql
       return false if space?(c)
       return false if digit?(c)
       return false if symbol?(c)
-      
+
       true
     end
 
@@ -66,7 +66,7 @@ class AnbtSql
     # アンダースコアは記号とは扱いません
     # これ以降の文字の扱いは保留
     def symbol?(c)
-      %w(" ? % & ' \( \) | * + , - . / : ; < = > ).include? c
+      %w(" ? % & ' \( \) | * + , - . / : ; < = > !).include? c
       #"
     end
 
@@ -82,25 +82,25 @@ class AnbtSql
       $stderr.puts "next_token #{@pos} <#{@before}> #{@before.length}" if $DEBUG
 
       start_pos = @pos
-      
+
       if @pos >= @before.length
         @pos += 1
         return nil
       end
-      
+
       @char = char_at(@before, @pos)
 
       if space?(@char)
         workString = ""
-        loop { 
+        loop {
           workString += @char
-          
+
           is_next_char_space = false
           if @pos + 1 < @before.size &&
             space?(char_at(@before, @pos+1))
               is_next_char_space = true
           end
-          
+
           if not is_next_char_space
             @pos += 1
             return AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE,
@@ -111,7 +111,7 @@ class AnbtSql
           end
         }
 
-        
+
       elsif @char == ";"
         @pos += 1
         # 2005.07.26 Tosiki Iga セミコロンは終了扱いではないようにする。
@@ -132,7 +132,7 @@ class AnbtSql
       elsif letter?(@char)
         s = ""
         # 文字列中のドットについては、文字列と一体として考える。
-        while (letter?(@char) || digit?(@char) || @char == '.') 
+        while (letter?(@char) || digit?(@char) || @char == '.')
           s += @char
           @pos += 1
           if (@pos >= @before.length())
@@ -146,14 +146,14 @@ class AnbtSql
           return AnbtSql::Token.new(AnbtSql::TokenConstants::KEYWORD,
                                       s, start_pos)
         end
-        
+
         return AnbtSql::Token.new(AnbtSql::TokenConstants::NAME,
                                     s, start_pos)
 
       elsif symbol?(@char)
         s = "" + @char
         @pos += 1
-        if (@pos >= @before.length()) 
+        if (@pos >= @before.length())
           return AnbtSql::Token.new(AnbtSql::TokenConstants::SYMBOL,
                                     s, start_pos)
         end
@@ -197,7 +197,7 @@ class AnbtSql
       pos = 0
       while pos < coarse_tokens.size
         coarse_token = coarse_tokens[pos]
-        
+
         case coarse_token._type
 
         when :quote_single
@@ -243,10 +243,10 @@ class AnbtSql
     ##
     # ２つ以上並んだキーワードは１つのキーワードとみなします。
     #     ["a", " ", "group", " ", "by", " ", "b"]
-    #  => ["a", " ", "group by",         " ", "b"] 
+    #  => ["a", " ", "group by",         " ", "b"]
     def concat_multiwords_keyword(tokens)
       temp_kw_list = @rule.kw_multi_words.map{|kw| kw.split(" ") }
-      
+
       # ワード数が多い順から
       temp_kw_list.sort{ |a, b|
         b.size <=> a.size
@@ -258,7 +258,7 @@ class AnbtSql
           temp_tokens = tokens[index, target_tokens_size].map {|x|
             x.string.sub(/\s+/, " ")
           }
-          
+
           if /#{kw.join(" ")}/i =~ temp_tokens.join
             tokens[index].string = temp_tokens.join
             (target_tokens_size-1).downto(1).each{|c|
@@ -285,28 +285,28 @@ class AnbtSql
       coarse_tokens = CoarseTokenizer.new.tokenize(sql_str)
 
       prepare_tokens(coarse_tokens)
-      
+
       tokens = []
       count = 0
       @token_pos = 0
       loop {
         token = next_token()
-        
+
         if $DEBUG
           pp "=" * 64, count, token, token.class
         end
-        
+
         if token._type == AnbtSql::TokenConstants::END_OF_SQL
           break
         else
           ;
         end
-        
+
         tokens.push token
         count += 1
         @token_pos += 1
       }
-      
+
       concat_multiwords_keyword(tokens)
 
       tokens
