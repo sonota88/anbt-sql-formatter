@@ -259,15 +259,15 @@ class AnbtSql
           end
 
           if equals_ignore_case(token.string, "BETWEEN")
-            encounterBetween = true
+            encounter_between = true
           end
 
           if equals_ignore_case(token.string, "AND")
             # BETWEEN のあとのANDは改行しない。
-            if not encounterBetween
+            if not encounter_between
               index += insert_return_and_indent(tokens, index, indent)
             end
-            encounterBetween = false
+            encounter_between = false
           end
 
         elsif (token._type == AnbtSql::TokenConstants::COMMENT) # ****
@@ -337,7 +337,7 @@ class AnbtSql
       remove_symbol_side_space(tokens)
       concat_operator_for_oracle(tokens)
 
-      encounterBetween = false
+      encounter_between = false
 
       format_list_main_loop(tokens)
 
