@@ -48,9 +48,9 @@ class AnbtSql
     def format(sql_str)
       @function_bracket.clear()
       begin
-        isSqlEndsWithNewLine = false
+        is_sql_ends_with_new_line = false
         if sql_str.end_with?("\n")
-          isSqlEndsWithNewLine = true
+          is_sql_ends_with_new_line = true
         end
         
         tokens = @parser.parse(sql_str)
@@ -66,7 +66,7 @@ class AnbtSql
           tokens.map{ |t| t.string }.join("")
         }.join("\n;\n\n").sub( /\n\n\Z/, "" )
 
-        after += "\n" if isSqlEndsWithNewLine
+        after += "\n" if is_sql_ends_with_new_line
 
         return after
       rescue => e
@@ -112,19 +112,19 @@ class AnbtSql
 
 
     def remove_symbol_side_space(tokens)
-      prevToken = nil
+      prev_token = nil
 
       (tokens.size - 1).downto(1){|index|
         token     = ArrayUtil.get(tokens, index)
-        prevToken = ArrayUtil.get(tokens, index - 1)
+        prev_token = ArrayUtil.get(tokens, index - 1)
 
         if (token._type == AnbtSql::TokenConstants::SPACE &&
-            (prevToken._type == AnbtSql::TokenConstants::SYMBOL ||
-             prevToken._type == AnbtSql::TokenConstants::COMMENT))
+            (prev_token._type == AnbtSql::TokenConstants::SYMBOL ||
+             prev_token._type == AnbtSql::TokenConstants::COMMENT))
           ArrayUtil.remove(tokens, index)
         elsif ((token._type == AnbtSql::TokenConstants::SYMBOL ||
                 token._type == AnbtSql::TokenConstants::COMMENT) &&
-               prevToken._type == AnbtSql::TokenConstants::SPACE)
+               prev_token._type == AnbtSql::TokenConstants::SPACE)
           ArrayUtil.remove(tokens, index - 1)
         elsif (token._type == AnbtSql::TokenConstants::SPACE)
           token.string = " "
