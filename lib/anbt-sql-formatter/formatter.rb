@@ -22,7 +22,7 @@ class AnbtSql
     end
 
 
-    def split_by_semicolon(tokens)
+    def split_to_statements(tokens)
       statements = []
       buf = []
       tokens.each{|token|
@@ -55,7 +55,7 @@ class AnbtSql
         
         tokens = @parser.parse(sql_str)
 
-        statements = split_by_semicolon(tokens)
+        statements = split_to_statements(tokens)
 
         statements = statements.map{|tokens|
           format_list(tokens)

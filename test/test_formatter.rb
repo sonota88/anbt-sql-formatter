@@ -500,8 +500,8 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
   end
   
   
-  def test_split_by_semicolon
-    msg = "split_by_semicolon - "
+  def test_split_to_statements
+    msg = "split_to_statements - "
 
     ########
     tokens = @parser.parse("a;b")
@@ -509,17 +509,17 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     assert_equals(
       msg + "first statement",
       "a",
-      @fmt.split_by_semicolon(tokens)[0][0].string
+      @fmt.split_to_statements(tokens)[0][0].string
     )
     assert_equals(
       msg + "second statement",
       "b",
-      @fmt.split_by_semicolon(tokens)[1][0].string
+      @fmt.split_to_statements(tokens)[1][0].string
     )
 
     ########
     tokens = @parser.parse(";")
-    statements = @fmt.split_by_semicolon(tokens)
+    statements = @fmt.split_to_statements(tokens)
     assert_equals(
       msg,
       [],
@@ -533,7 +533,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
 
     ########
     tokens = @parser.parse("a;")
-    statements = @fmt.split_by_semicolon(tokens)
+    statements = @fmt.split_to_statements(tokens)
     assert_equals(
       msg,
       "name (a)",
@@ -547,7 +547,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
 
     ########
     tokens = @parser.parse(";a")
-    statements = @fmt.split_by_semicolon(tokens)
+    statements = @fmt.split_to_statements(tokens)
     assert_equals(
       msg,
       [],
@@ -561,7 +561,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
 
     ########
     tokens = @parser.parse("a;b")
-    statements = @fmt.split_by_semicolon(tokens)
+    statements = @fmt.split_to_statements(tokens)
     assert_equals(
       msg,
       "name (a)",
