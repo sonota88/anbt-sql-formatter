@@ -5,7 +5,7 @@ require "anbt-sql-formatter/version"
 Gem::Specification.new do |s|
   s.name        = "anbt-sql-formatter"
   s.version     = Anbt::Sql::Formatter::VERSION
-  s.authors     = ["sonota"]
+  s.authors     = ["sonota88"]
   s.email       = ["yosiot8753@gmail.com"]
   s.homepage    = ""
   s.summary     = %q{A tool for SQL formatting written in Ruby.}
