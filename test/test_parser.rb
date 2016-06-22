@@ -455,5 +455,39 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
+    ########
+    assert_equals(
+      msg + "multiwords keyword 3",
+      strip_indent(
+        <<-EOB
+        keyword (select)
+        space ( )
+        value ('group by')
+        EOB
+      ),
+      _format( @parser.parse(strip_indent(
+        <<-EOB
+        select 'group by'
+        EOB
+      )))
+    )
+
+    ########
+    assert_equals(
+      msg + "multiwords keyword 4",
+      strip_indent(
+        <<-EOB
+        keyword (select)
+        space ( )
+        comment (/*group by*/)
+        EOB
+      ),
+      _format( @parser.parse(strip_indent(
+        <<-EOB
+        select /*group by*/
+        EOB
+      )))
+    )
+
   end
 end
