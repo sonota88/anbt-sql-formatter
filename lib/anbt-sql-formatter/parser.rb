@@ -259,7 +259,7 @@ class AnbtSql
             x.string.sub(/\s+/, " ")
           }
 
-          if /#{kw.join(" ")}/i =~ temp_tokens.join
+          if equals_ignore_case(kw.join(" "), temp_tokens.join)
             tokens[index].string = temp_tokens.join
             (target_tokens_size-1).downto(1).each{|c|
               tokens.delete_at(index + c)
