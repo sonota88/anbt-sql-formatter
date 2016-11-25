@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Anbt::Sql::Formatter::VERSION
   s.authors     = ["sonota88"]
   s.email       = ["yosiot8753@gmail.com"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/sonota88/anbt-sql-formatter"
   s.summary     = %q{A tool for SQL formatting written in Ruby.}
   s.description = %q{A tool for SQL formatting written in Ruby. Ruby port of Blanco SQL Formatter.}
 
