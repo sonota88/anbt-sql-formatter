@@ -91,9 +91,9 @@ class AnbtSql
       @char = char_at(@before, @pos)
 
       if space?(@char)
-        workString = ""
+        work_string = ""
         loop {
-          workString += @char
+          work_string += @char
 
           is_next_char_space = false
           if @pos + 1 < @before.size &&
@@ -104,7 +104,7 @@ class AnbtSql
           if not is_next_char_space
             @pos += 1
             return AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE,
-                                      workString, start_pos)
+                                      work_string, start_pos)
           else
             @pos += 1
             next
