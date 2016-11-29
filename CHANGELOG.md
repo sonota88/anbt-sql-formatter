@@ -1,3 +1,8 @@
+# 0.0.5 (2016-11-29)
+
+No breaking changes.
+
+
 # 0.0.4 (2016-06-24)
 
 ## Bug Fixes
