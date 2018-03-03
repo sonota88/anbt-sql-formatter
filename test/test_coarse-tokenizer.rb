@@ -62,10 +62,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   
 
   def test_tokenize_1
-    msg = "tokenize - "
-
     assert_equals(
-      msg,
+      "tokenize 1",
       strip_indent(
         <<-EOB
         plain (aa)
@@ -80,10 +78,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_tokenize_2
-    msg = "tokenize - "
-                 
     assert_equals(
-      msg,
+      "tokenize 2",
       strip_indent(
         <<-EOB
         plain (aa )
@@ -99,10 +95,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_tokenize_3
-    msg = "tokenize - "
-
     assert_equals(
-      msg,
+      "tokenize 3",
       strip_indent(
         <<-EOB
         plain (aa )
@@ -118,10 +112,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_tokenize_4
-    msg = "tokenize - "
-
     assert_equals(
-      msg,
+      "tokenize 4",
       strip_indent(
         <<-EOB
         plain (aa )
@@ -139,10 +131,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_tokenize_5
-    msg = "tokenize - "
-
     assert_equals(
-      msg,
+      "tokenize 5",
       strip_indent(
         <<-EOB
         plain (aa )
@@ -159,10 +149,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_tokenize_6
-    msg = "tokenize - "
-
     assert_equals(
-      msg + "begin with multiline comment",
+      "tokenize - begin with multiline comment",
       strip_indent(
         <<-EOB
         comment_multi (/* bb */)
@@ -179,10 +167,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
 
 
   def test_string_in_string_1
-    msg = "string_in_string"
-
     assert_equals(
-      msg,
+      "string_in_string 1",
       strip_indent(
         <<-EOB
         quote_double ("aa'bb'cc")
@@ -197,10 +183,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_string_in_string_2
-    msg = "string_in_string"
-
     assert_equals(
-      msg,
+      "string_in_string 2",
       strip_indent(
         <<-EOB
         quote_single ('aa"bb"cc')
@@ -216,10 +200,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
 
 
   def test_comment_in_comment_1
-    msg = "comment_in_comment - "
-
     assert_equals(
-      msg,
+      "comment_in_comment 1",
       strip_indent(
         <<-EOB
         comment_single (--a--b)
@@ -234,10 +216,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_comment_in_comment_2
-    msg = "comment_in_comment - "
-
     assert_equals(
-      msg,
+      "comment_in_comment 2",
       strip_indent(
         <<-EOB
         comment_single (-- aa /* bb */)
@@ -252,10 +232,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_comment_in_comment_3
-    msg = "comment_in_comment - "
-
     assert_equals(
-      msg,
+      "comment_in_comment 3",
       strip_indent(
         <<-EOB
         comment_multi (/* aa /* bb */)
@@ -270,10 +248,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_comment_in_comment_4
-    msg = "comment_in_comment - "
-
     assert_equals(
-      msg,
+      "comment_in_comment 4",
       strip_indent(
         <<-EOB
         comment_multi (/* aa -- bb */)
@@ -289,10 +265,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
 
 
   def test_string_in_comment_1
-    msg = "string_in_comment - "
-
     assert_equals(
-      msg,
+      "string_in_comment 1",
       strip_indent(
         <<-EOB
         comment_single (-- aa "bb" cc)
@@ -307,10 +281,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_string_in_comment_2
-    msg = "string_in_comment - "
-
     assert_equals(
-      msg,
+      "string_in_comment 2",
       strip_indent(
         <<-EOB
         comment_single (-- aa 'bb' cc)
@@ -325,10 +297,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_string_in_comment_3
-    msg = "string_in_comment - "
-
     assert_equals(
-      msg,
+      "string_in_comment 3",
       strip_indent(
         <<-EOB
         comment_multi (/* aa "bb" cc */)
@@ -343,10 +313,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_string_in_comment_4
-    msg = "string_in_comment - "
-
     assert_equals(
-      msg,
+      "string_in_comment 4",
       strip_indent(
         <<-EOB
         comment_multi (/* aa 'bb' cc */)
@@ -362,10 +330,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   
 
   def test_comment_in_string_1
-    msg = "comment_in_string - "
-
     assert_equals(
-      msg + "comment_single in quote_single",
+      "comment_in_string - comment_single in quote_single",
       strip_indent(
         <<-EOB
         quote_single ('aa--bb')
@@ -380,10 +346,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_comment_in_string_2
-    msg = "comment_in_string - "
-
     assert_equals(
-      msg + "comment_single in quote_double",
+      "comment_in_string - comment_single in quote_double",
       strip_indent(
         <<-EOB
         quote_double ("aa--bb")
@@ -398,10 +362,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_comment_in_string_3
-    msg = "comment_in_string - "
-
     assert_equals(
-      msg + "comment_multi in quote_double",
+      "comment_in_string - comment_multi in quote_double",
       strip_indent(
         <<-EOB
         quote_double ("aa /* bb */ cc")
@@ -416,10 +378,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_comment_in_string_4
-    msg = "comment_in_string - "
-
     assert_equals(
-      msg + "comment_multi in quote_double",
+      "comment_in_string - comment_multi in quote_double",
       strip_indent(
         <<-EOB
         quote_single ('aa /* bb */ cc')
@@ -435,10 +395,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   
 
   def test_string_escape_1
-    msg = "string_escape"
-
     assert_equals(
-      msg,
+      "string_escape 1",
       strip_indent(
         <<-EOB
         quote_double ("_a_\\\\_b_\n_c_\\'_d_")
@@ -453,10 +411,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_string_escape_2
-    msg = "string_escape"
-
     assert_equals(
-      msg,
+      "string_escape 2",
       strip_indent(
         <<-EOB
         quote_single ('_a_\\\\_b_\n_c_\\'_d_')
@@ -471,10 +427,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_string_escape_3
-    msg = "string_escape"
-
     assert_equals(
-      msg,
+      "string_escape 3",
       strip_indent(
         <<-EOB
         quote_double ("_a_""_b_")
@@ -489,10 +443,8 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
   def test_string_escape_4
-    msg = "string_escape"
-
     assert_equals(
-      msg,
+      "string_escape 4",
       strip_indent(
         <<-EOB
         quote_single ('_a_''_b_')
