@@ -82,7 +82,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_tokenize_2
     msg = "tokenize - "
                  
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -102,7 +101,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_tokenize_3
     msg = "tokenize - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -122,7 +120,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_tokenize_4
     msg = "tokenize - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -144,7 +141,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_tokenize_5
     msg = "tokenize - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -165,7 +161,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_tokenize_6
     msg = "tokenize - "
 
-    ########
     assert_equals(
       msg + "begin with multiline comment",
       strip_indent(
@@ -186,7 +181,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_in_string_1
     msg = "string_in_string"
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -205,7 +199,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_in_string_2
     msg = "string_in_string"
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -225,7 +218,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_comment_in_comment_1
     msg = "comment_in_comment - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -244,7 +236,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_comment_in_comment_2
     msg = "comment_in_comment - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -263,7 +254,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_comment_in_comment_3
     msg = "comment_in_comment - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -282,7 +272,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_comment_in_comment_4
     msg = "comment_in_comment - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -302,7 +291,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_in_comment_1
     msg = "string_in_comment - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -321,7 +309,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_in_comment_2
     msg = "string_in_comment - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -340,7 +327,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_in_comment_3
     msg = "string_in_comment - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -359,7 +345,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_in_comment_4
     msg = "string_in_comment - "
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -379,7 +364,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_comment_in_string_1
     msg = "comment_in_string - "
 
-    ########
     assert_equals(
       msg + "comment_single in quote_single",
       strip_indent(
@@ -398,7 +382,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_comment_in_string_2
     msg = "comment_in_string - "
 
-    ########
     assert_equals(
       msg + "comment_single in quote_double",
       strip_indent(
@@ -417,7 +400,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_comment_in_string_3
     msg = "comment_in_string - "
 
-    ########
     assert_equals(
       msg + "comment_multi in quote_double",
       strip_indent(
@@ -436,7 +418,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_comment_in_string_4
     msg = "comment_in_string - "
 
-    ########
     assert_equals(
       msg + "comment_multi in quote_double",
       strip_indent(
@@ -456,7 +437,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_escape_1
     msg = "string_escape"
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -475,7 +455,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_escape_2
     msg = "string_escape"
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -494,7 +473,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_escape_3
     msg = "string_escape"
 
-    ########
     assert_equals(
       msg,
       strip_indent(
@@ -513,7 +491,6 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   def test_string_escape_4
     msg = "string_escape"
 
-    ########
     assert_equals(
       msg,
       strip_indent(
