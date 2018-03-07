@@ -59,7 +59,15 @@ class TestCoarseTokenizer < Test::Unit::TestCase
     assert_equals( msg,  "", @tok.buf)
     assert_equals( msg,  "def", @tok.str)
   end
-  
+
+
+  def test_tokenize_empty
+    assert_equal(
+      [],
+      @tok.tokenize("")
+    )
+  end
+
 
   def test_tokenize_1
     assert_equals(
