@@ -174,6 +174,51 @@ class TestCoarseTokenizer < Test::Unit::TestCase
   end
 
 
+  def test_tokenize_empty_quote_single
+    assert_equal(
+      strip_indent(
+        <<-EOB
+        quote_single ('')
+        EOB
+      ),
+      _format(@tok.tokenize("''"))
+    )
+  end
+
+  def test_tokenize_empty_quote_double
+    assert_equal(
+      strip_indent(
+        <<-EOB
+        quote_double ("")
+        EOB
+      ),
+      _format(@tok.tokenize('""'))
+    )
+  end
+
+  def test_tokenize_empty_comment_single
+    assert_equal(
+      strip_indent(
+        <<-EOB
+        comment_single (--\n)
+        EOB
+      ),
+      _format(@tok.tokenize("--\n"))
+    )
+  end
+
+  def test_tokenize_empty_comment_multi
+    assert_equal(
+      strip_indent(
+        <<-EOB
+        comment_multi (/**/)
+        EOB
+      ),
+      _format(@tok.tokenize("/**/"))
+    )
+  end
+
+
   def test_string_in_string_1
     assert_equals(
       "string_in_string 1",
