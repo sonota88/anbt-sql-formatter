@@ -56,14 +56,14 @@ class AnbtSql
         tokens = @parser.parse(sql_str)
 
         statements = split_to_statements(tokens)
-
-        statements = statements.map{|tokens|
-          format_list(tokens)
+ 
+        statements = statements.map{|inner_tokens|
+          format_list(inner_tokens)
         }
 
         # 変換結果を文字列に戻す。
-        after = statements.map{|tokens|
-          tokens.map{ |t| t.string }.join("")
+        after = statements.map{|inner_tokens|
+          inner_tokens.map{ |t| t.string }.join("")
         }.join("\n;\n\n").sub( /\n\n\Z/, "" )
 
         after += "\n" if is_sql_ends_with_new_line
@@ -336,8 +336,6 @@ class AnbtSql
       modify_keyword_case(tokens)
       remove_symbol_side_space(tokens)
       concat_operator_for_oracle(tokens)
-
-      encounter_between = false
 
       format_list_main_loop(tokens)
 
