@@ -498,8 +498,20 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       @fmt.format("a;")
     )
   end
-  
-  
+
+  def test_format_between
+    assert_equals(
+      "should not add a new line to 'BETWEEN ... AND ...'",
+      strip_indent(
+        <<-EOB
+        BETWEEN 0 AND 1
+        EOB
+      ),
+      @fmt.format("between 0 and 1")
+    )
+  end
+
+
   def test_split_to_statements
     msg = "split_to_statements - "
 
