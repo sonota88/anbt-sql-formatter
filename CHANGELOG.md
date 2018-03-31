@@ -1,3 +1,8 @@
+# 0.0.6 (2018-03-31)
+
+No breaking changes.
+
+
 # 0.0.5 (2016-11-29)
 
 No breaking changes.

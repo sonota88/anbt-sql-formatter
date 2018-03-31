@@ -56,7 +56,7 @@ class AnbtSql
         tokens = @parser.parse(sql_str)
 
         statements = split_to_statements(tokens)
- 
+
         statements = statements.map{|inner_tokens|
           format_list(inner_tokens)
         }
@@ -174,6 +174,8 @@ class AnbtSql
 
       prev = AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE,
                                   " ")
+
+      encounter_between = false
 
       index = 0
       # Length of tokens changes in loop!
