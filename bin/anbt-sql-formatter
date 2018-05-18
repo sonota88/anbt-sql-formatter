@@ -29,16 +29,16 @@ def main
   rule = AnbtSql::Rule.new
 
   # キーワードを大文字に変換
-  rule.keyword = AnbtSql::Rule::KEYWORD_UPPER_CASE
-  
+  #rule.keyword = AnbtSql::Rule::KEYWORD_UPPER_CASE
+
   # User defined additional functions:
-  %w(count sum substr date).each{|func_name|
-    rule.function_names << func_name.upcase
-  }
+  #%w(count sum substr date).each{|func_name|
+  #  rule.function_names << func_name.upcase
+  #}
 
   #rule.indentString = "('-')"
-  rule.indent_string = "    "
-  
+  #rule.indent_string = "    "
+
   formatter = AnbtSql::Formatter.new(rule)
   result = formatter.format(src)
   puts result

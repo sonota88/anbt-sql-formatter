@@ -31,27 +31,28 @@ class AnbtSql
     attr_accessor :kw_minus1_indent_nl_x_plus1_indent
     attr_accessor :kw_nl_x
     attr_accessor :kw_nl_x_plus1_indent
+    attr_accessor :kw_minus1_indent_nl_x
 
     # キーワードの変換規則: 何もしない
     KEYWORD_NONE = 0
 
     # キーワードの変換規則: 大文字にする
     KEYWORD_UPPER_CASE = 1
-    
+
     # キーワードの変換規則: 小文字にする
     KEYWORD_LOWER_CASE = 2
 
 
     def initialize
       # キーワードの変換規則.
-      @keyword = KEYWORD_UPPER_CASE
+      @keyword = KEYWORD_LOWER_CASE
 
       # インデントの文字列. 設定は自由入力とする。
       # 通常は " ", " ", "\t" のいずれか。
       @indent_string = "    "
 
-      @space_after_comma = false
-      
+      @space_after_comma = true
+
       # __foo
       # ____KW
       @kw_plus1_indent_x_nl = %w(INSERT INTO CREATE DROP TRUNCATE TABLE CASE)
@@ -60,18 +61,25 @@ class AnbtSql
       # __KW
       # ____bar
       @kw_minus1_indent_nl_x_plus1_indent = %w(FROM WHERE SET HAVING)
-      @kw_minus1_indent_nl_x_plus1_indent.concat ["ORDER BY", "GROUP BY"]
+      #@kw_minus1_indent_nl_x_plus1_indent.concat ["SELECT DISTINCT", "UNION ALL"]
+
+      # ____foo
+      # __KW_bar
+      @kw_minus1_indent_nl_x = ["ORDER BY"]#, "GROUP BY"]
 
       # __foo
       # ____KW
-      @kw_nl_x_plus1_indent = %w(ON USING)
-      
+      @kw_nl_x_plus1_indent = %w(ON USING ROWS)
+
       # __foo
-      # __KW
-      @kw_nl_x = %w(OR THEN ELSE)
-      # @kw_nl_x = %w(OR WHEN ELSE)
-      
-      @kw_multi_words = ["ORDER BY", "GROUP BY"]
+      # __KW_bar
+      @kw_nl_x = %w(OR THEN ELSE WHEN JOIN)
+      @kw_nl_x.concat ["LEFT JOIN", "RIGHT JOIN", "INNER JOIN",
+        "FULL OUTER JOIN", "CROSS JOIN"]
+      # @kw_nl_x = %w(OR WHEN ELSE) "ORDER BY", "GROUP BY",
+
+      @kw_multi_words = ["ORDER BY", "GROUP BY", "LEFT JOIN", "RIGHT JOIN", "INNER JOIN",
+        "FULL OUTER JOIN", "CROSS JOIN", "UNION ALL", "SELECT DISTINCT", "WITHIN GROUP"]
 
       # 関数の名前。
       # Java版は初期値 null
@@ -92,6 +100,8 @@ class AnbtSql
          "REPLACE", "REVERSE", "RIGHT", "RPAD", "RTRIM", "SOUNDEX",
          "SPACE", "STRCMP", "SUBSTRING", "SUBSTRING", "SUBSTRING",
          "SUBSTRING", "SUBSTRING_INDEX", "TRIM", "UCASE", "UPPER",
+         "SPLIT_PART", "REGEXP_COUNT", "REGEXP_INSTR", "REGEXP_REPLACE",
+         "REGEXP_SUBSTR",
          # getSystemFunctions
          "DATABASE", "USER", "SYSTEM_USER", "SESSION_USER", "PASSWORD",
          "ENCRYPT", "LAST_INSERT_ID", "VERSION",
@@ -102,7 +112,11 @@ class AnbtSql
          "FROM_DAYS", "DATE_FORMAT", "TIME_FORMAT", "CURDATE",
          "CURRENT_DATE", "CURTIME", "CURRENT_TIME", "NOW", "SYSDATE",
          "CURRENT_TIMESTAMP", "UNIX_TIMESTAMP", "FROM_UNIXTIME",
-         "SEC_TO_TIME", "TIME_TO_SEC"
+         "SEC_TO_TIME", "TIME_TO_SEC", "DATE_DIFF",
+         # misc for testing
+         "NVL", "LISTAGG", "ROW_NUMBER", "OVER", "CAST", "IN", "COALESCE",
+         "LAST_VALUE", "FIRST_VALUE", "LAG", "LEAD", "EXTRACT", "WITHIN GROUP",
+         "COUNT", "SUM", "SUBSTR", "DATE"
         ]
     end
 
@@ -117,7 +131,7 @@ class AnbtSql
           return true
         end
       end
-      
+
       return false
     end
   end
