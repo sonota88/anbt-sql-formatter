@@ -101,7 +101,7 @@ class AnbtSql
          "SPACE", "STRCMP", "SUBSTRING", "SUBSTRING", "SUBSTRING",
          "SUBSTRING", "SUBSTRING_INDEX", "TRIM", "UCASE", "UPPER",
          "SPLIT_PART", "REGEXP_COUNT", "REGEXP_INSTR", "REGEXP_REPLACE",
-         "REGEXP_SUBSTR",
+         "REGEXP_SUBSTR", "BTRIM", "STRPOS",
          # getSystemFunctions
          "DATABASE", "USER", "SYSTEM_USER", "SESSION_USER", "PASSWORD",
          "ENCRYPT", "LAST_INSERT_ID", "VERSION",
@@ -112,11 +112,13 @@ class AnbtSql
          "FROM_DAYS", "DATE_FORMAT", "TIME_FORMAT", "CURDATE",
          "CURRENT_DATE", "CURTIME", "CURRENT_TIME", "NOW", "SYSDATE",
          "CURRENT_TIMESTAMP", "UNIX_TIMESTAMP", "FROM_UNIXTIME",
-         "SEC_TO_TIME", "TIME_TO_SEC", "DATE_DIFF",
-         # misc for testing
+         "SEC_TO_TIME", "TIME_TO_SEC", "DATEDIFF", "DATEADD", "DATE_TRUNC",
+         # Redshift
          "NVL", "LISTAGG", "ROW_NUMBER", "OVER", "CAST", "IN", "COALESCE",
          "LAST_VALUE", "FIRST_VALUE", "LAG", "LEAD", "EXTRACT", "WITHIN GROUP",
-         "COUNT", "SUM", "SUBSTR", "DATE"
+         "COUNT", "SUM", "SUBSTR", "DATE", "AVG", "LEN", "DENSE_RANK", "LEAST",
+         "GREATEST", "FUNC_SHA1", "JSON_EXTRACT_PATH_TEXT", "CEIL", "FLOOR",
+         "NULLIF"
         ]
     end
 

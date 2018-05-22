@@ -79,7 +79,9 @@ class AnbtSql
     def modify_keyword_case(tokens)
       # SQLキーワードは大文字とする。or ...
       tokens.each{ |token|
-        next if token._type != AnbtSql::TokenConstants::KEYWORD
+        next if ((token._type != AnbtSql::TokenConstants::KEYWORD) &&
+                (! @rule.function?(token.string))
+        )
         case @rule.keyword
         when AnbtSql::Rule::KEYWORD_NONE
           ;
@@ -241,15 +243,24 @@ class AnbtSql
 
         elsif token._type == AnbtSql::TokenConstants::KEYWORD # ****
 
+          # To deal with multiple join conditions
+          if not equals_ignore_case(token.string, "AND")
+            encounter_on = false
+          end
+
           # indentを２つ増やし、キーワードの後ろで改行
           if (equals_ignore_case(token.string, "DELETE"         ) ||
               equals_ignore_case(token.string, "SELECT"         ) ||
               equals_ignore_case(token.string, "SELECT DISTINCT") ||
+              equals_ignore_case(token.string, "UNION ALL"      ) ||
+              equals_ignore_case(token.string, "UNION"      ) ||
               equals_ignore_case(token.string, "UPDATE"         )  )
 
+            # If we're at the final select after several CTEs
             if prev.string == ")"
               index += insert_return_and_indent(tokens, index, indent, "new_line")
               indent += 1
+              index += insert_return_and_indent(tokens, index + 1, indent, "r")
             else
               indent += 1
               index += insert_return_and_indent(tokens, index + 1, indent, "+2")
@@ -309,10 +320,18 @@ class AnbtSql
             encounter_between = true
           end
 
+          if equals_ignore_case(token.string, "ON")
+            encounter_on = true
+          end
+
           if equals_ignore_case(token.string, "AND")
             # BETWEEN のあとのANDは改行しない。
             if not encounter_between
               index += insert_return_and_indent(tokens, index, indent)
+            end
+            if (encounter_on) && (not encounter_between)
+              # Indent the line for join conditions
+              index += insert_return_and_indent(tokens, index, indent + 1)
             end
             encounter_between = false
           end
@@ -368,6 +387,42 @@ class AnbtSql
       }
     end
 
+    #  before: [..., 8"(", 7" ", 6"X", 5" ", 4"+,-,*,/", 3" ", 2"Y", 1" ", 0")", ...]
+    #  after:  [..., "(X)", ...]
+    def special_treatment_for_parenthesis_with_one_math_expression(tokens)
+        (tokens.size - 1).downto(8).each{|index|
+          next if (index >= tokens.size())
+
+          t0 = ArrayUtil.get(tokens, index    )
+          t1 = ArrayUtil.get(tokens, index - 1)
+          t2 = ArrayUtil.get(tokens, index - 2)
+          t3 = ArrayUtil.get(tokens, index - 3)
+          t4 = ArrayUtil.get(tokens, index - 4)
+          t5 = ArrayUtil.get(tokens, index - 5)
+          t6 = ArrayUtil.get(tokens, index - 6)
+          t7 = ArrayUtil.get(tokens, index - 7)
+          t8 = ArrayUtil.get(tokens, index - 8)
+
+          if (equals_ignore_case(t8.string      , "(") &&
+              equals_ignore_case(t7.string.strip, "" ) &&
+              equals_ignore_case(t5.string.strip, "" ) &&
+              (['+', '-', '/', '*'].include? t4.string)&&
+              equals_ignore_case(t3.string.strip, "" ) &&
+              equals_ignore_case(t1.string.strip, "" ) &&
+              equals_ignore_case(t0.string      , ")")   )
+            t8.string = t8.string + t6.string + t4.string + t2.string + t0.string
+            ArrayUtil.remove(tokens, index    )
+            ArrayUtil.remove(tokens, index - 1)
+            ArrayUtil.remove(tokens, index - 2)
+            ArrayUtil.remove(tokens, index - 3)
+            ArrayUtil.remove(tokens, index - 4)
+            ArrayUtil.remove(tokens, index - 5)
+            ArrayUtil.remove(tokens, index - 6)
+            ArrayUtil.remove(tokens, index - 7)
+          end
+        }
+      end
+
 
     def format_list(tokens)
       return [] if tokens.empty?
@@ -393,11 +448,14 @@ class AnbtSql
       cast_operator_for_redshift(tokens)
 
       encounter_between = false
+      encounter_on = false
 
       format_list_main_loop(tokens)
 
       special_treatment_for_parenthesis_with_one_element(tokens)
       insert_space_between_tokens(tokens)
+
+      special_treatment_for_parenthesis_with_one_math_expression(tokens)
 
       return tokens
     end
@@ -416,18 +474,15 @@ class AnbtSql
         # Split up long case statements
         if not
            (equals_ignore_case(token.string, "ROWS") ||
-            equals_ignore_case(token.string, "WHEN")
-            #equals_ignore_case(token.string, "THEN")
-            #equals_ignore_case(token.string, "END" )
+            equals_ignore_case(token.string, "WHEN") ||
+            equals_ignore_case(token.string, "END" )
           )
           return 0
         end
       end
 
       if @group_order_by_check
-        prev = ArrayUtil.get(tokens, index - 1)
         token = ArrayUtil.get(tokens, index)
-        after = ArrayUtil.get(tokens, index + 1)
         if token.string != ","
           @group_order_by_check = false
         else
