@@ -32,6 +32,11 @@ class AnbtSql
     attr_accessor :kw_nl_x
     attr_accessor :kw_nl_x_plus1_indent
 
+    # Limit number of values per line in IN clause to this value.
+    #
+    # nil:: one value per line (default)
+    # n (>=2):: n values per line
+    # ONELINE_IN_VALUES_NUM:: all values in one line
     attr_accessor :in_values_num
 
     # キーワードの変換規則: 何もしない
