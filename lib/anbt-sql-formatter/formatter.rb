@@ -184,7 +184,7 @@ class AnbtSql
       while index < tokens.size
         token = ArrayUtil.get(tokens, index)
 
-        if token._type == AnbtSql::TokenConstants::SYMBOL # ****
+        if token._type == AnbtSql::TokenConstants::SYMBOL
 
           # indentを１つ増やし、'('のあとで改行。
           if token.string == "("
@@ -211,7 +211,7 @@ class AnbtSql
             index += insert_return_and_indent(tokens, index, indent)
           end
 
-        elsif token._type == AnbtSql::TokenConstants::KEYWORD # ****
+        elsif token._type == AnbtSql::TokenConstants::KEYWORD
           in_values_checker = nil if in_values_checker
 
           in_values_checker = AnbtSql::InValuesChecker.new(@rule) if equals_ignore_case(token.string, "IN")
@@ -279,7 +279,7 @@ class AnbtSql
             encounter_between = false
           end
 
-        elsif (token._type == AnbtSql::TokenConstants::COMMENT) # ****
+        elsif (token._type == AnbtSql::TokenConstants::COMMENT)
 
           if token.string.start_with?("/*")
             # マルチラインコメントの後に改行を入れる。

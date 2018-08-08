@@ -36,7 +36,6 @@ def main
     rule.function_names << func_name.upcase
   }
 
-  #rule.indentString = "('-')"
   rule.indent_string = "    "
   
   formatter = AnbtSql::Formatter.new(rule)
