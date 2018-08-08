@@ -3,6 +3,7 @@
 require "anbt-sql-formatter/rule"
 require "anbt-sql-formatter/parser"
 require "anbt-sql-formatter/exception"
+require "anbt-sql-formatter/in_values_checker"
 require "anbt-sql-formatter/helper" # Stack
 
 
@@ -16,7 +17,7 @@ class AnbtSql
     def initialize(rule)
       @rule = rule
       @parser = AnbtSql::Parser.new(@rule)
-      
+
       # 丸カッコが関数のものかどうかを記憶
       @function_bracket = Stack.new
     end
@@ -52,7 +53,7 @@ class AnbtSql
         if sql_str.end_with?("\n")
           is_sql_ends_with_new_line = true
         end
-        
+
         tokens = @parser.parse(sql_str)
 
         statements = split_to_statements(tokens)
@@ -74,12 +75,12 @@ class AnbtSql
       end
     end
 
-    
+
     def modify_keyword_case(tokens)
       # SQLキーワードは大文字とする。or ...
       tokens.each{ |token|
         next if token._type != AnbtSql::TokenConstants::KEYWORD
-        
+
         case @rule.keyword
         when AnbtSql::Rule::KEYWORD_NONE
           ;
@@ -91,7 +92,7 @@ class AnbtSql
       }
     end
 
-    
+
     ##
     # .
     #  ["(", "+", ")"] => ["(+)"]
@@ -101,7 +102,7 @@ class AnbtSql
       while index < tokens.size - 2
         if (tokens[index    ].string == "(" &&
             tokens[index + 1].string == "+" &&
-            tokens[index + 2].string == ")") 
+            tokens[index + 2].string == ")")
           tokens[index].string = "(+)"
           ArrayUtil.remove(tokens, index + 1)
           ArrayUtil.remove(tokens, index + 1)
@@ -142,21 +143,21 @@ class AnbtSql
         token = ArrayUtil.get(tokens, index    )
 
         if (prev._type  != AnbtSql::TokenConstants::SPACE &&
-            token._type != AnbtSql::TokenConstants::SPACE) 
+            token._type != AnbtSql::TokenConstants::SPACE)
           # カンマの後にはスペース入れない
           if not @rule.space_after_comma
             if prev.string == ","
               index += 1 ; next
             end
           end
-          
+
           # 関数名の後ろにはスペースは入れない
           # no space after function name
           if (@rule.function?(prev.string) &&
               token.string == "(")
             index += 1 ; next
           end
-          
+
           ArrayUtil.add(tokens, index,
                      AnbtSql::Token.new(AnbtSql::TokenConstants::SPACE, " ")
                      )
@@ -164,8 +165,8 @@ class AnbtSql
         index += 1
       end
     end
-    
-    
+
+
     def format_list_main_loop(tokens)
       # インデントを整える。
       indent = 0
@@ -176,12 +177,13 @@ class AnbtSql
                                   " ")
 
       encounter_between = false
+      in_values_checker = nil
 
       index = 0
       # Length of tokens changes in loop!
       while index < tokens.size
         token = ArrayUtil.get(tokens, index)
-        
+
         if token._type == AnbtSql::TokenConstants::SYMBOL # ****
 
           # indentを１つ増やし、'('のあとで改行。
@@ -196,18 +198,23 @@ class AnbtSql
             indent = (bracket_indent.pop()).to_i
             index += insert_return_and_indent(tokens, index, indent)
             @function_bracket.pop()
-            
+
             # ','の前で改行
           elsif token.string == ","
-            index += insert_return_and_indent(tokens, index, indent, "x")
+            if in_values_checker.nil? || in_values_checker.check()
+              index += insert_return_and_indent(tokens, index, indent, "x")
+            end
 
           elsif token.string == ";"
             # 2005.07.26 Tosiki Iga とりあえずセミコロンでSQL文がつぶれないように改良
             indent = 0
             index += insert_return_and_indent(tokens, index, indent)
           end
-          
+
         elsif token._type == AnbtSql::TokenConstants::KEYWORD # ****
+          in_values_checker = nil if in_values_checker
+
+          in_values_checker = AnbtSql::InValuesChecker.new(@rule) if equals_ignore_case(token.string, "IN")
 
           # indentを２つ増やし、キーワードの後ろで改行
           if (equals_ignore_case(token.string, "DELETE") ||
@@ -254,7 +261,7 @@ class AnbtSql
           # キーワードの前で改行。indentを強制的に０にする。
           if (equals_ignore_case(token.string, "UNION"    ) ||
               equals_ignore_case(token.string, "INTERSECT") ||
-              equals_ignore_case(token.string, "EXCEPT"   )   ) 
+              equals_ignore_case(token.string, "EXCEPT"   )   )
             indent -= 2
             index += insert_return_and_indent(tokens, index    , indent)
             index += insert_return_and_indent(tokens, index + 1, indent)
@@ -282,12 +289,12 @@ class AnbtSql
           end
         end
         prev = token
-        
+
         index += 1
       end
     end
-    
-    
+
+
     #  before: [..., "(", space, "X", space, ")", ...]
     #  after:  [..., "(X)", ...]
     # ただし、これでは "(X)" という一つの symbol トークンになってしまう。
@@ -295,7 +302,7 @@ class AnbtSql
     # せっかくなので symbol/X/symbol と分けたい。
     def special_treatment_for_parenthesis_with_one_element(tokens)
       (tokens.size - 1).downto(4).each{|index|
-        next if (index >= tokens.size()) 
+        next if (index >= tokens.size())
 
         t0 = ArrayUtil.get(tokens, index    )
         t1 = ArrayUtil.get(tokens, index - 1)
@@ -305,7 +312,7 @@ class AnbtSql
 
         if (equals_ignore_case(t4.string      , "(") &&
             equals_ignore_case(t3.string.strip, "" ) &&
-            equals_ignore_case(t1.string.strip, "" ) && 
+            equals_ignore_case(t1.string.strip, "" ) &&
             equals_ignore_case(t0.string      , ")")   )
           t4.string = t4.string + t2.string + t0.string
           ArrayUtil.remove(tokens, index    )
@@ -316,7 +323,7 @@ class AnbtSql
       }
     end
 
-    
+
     def format_list(tokens)
       return [] if tokens.empty?
 
@@ -328,7 +335,7 @@ class AnbtSql
         ArrayUtil.remove(tokens, 0)
       end
       return [] if tokens.empty?
-      
+
       token = ArrayUtil.get(tokens, tokens.size() - 1)
       if token._type == AnbtSql::TokenConstants::SPACE
         ArrayUtil.remove(tokens, tokens.size() - 1)
@@ -357,11 +364,11 @@ class AnbtSql
       # 関数内では改行は挿入しない
       # No linefeed in function.
       return 0 if (@function_bracket.include?(true))
-      
+
       begin
         # 挿入する文字列を作成する。
         s = "\n"
-        
+
         # インデントをつける。
         indent = 0 if indent < 0 ## Java版と異なる
         s += @rule.indent_string * indent
@@ -397,6 +404,6 @@ class AnbtSql
       rescue => e
         raise e
       end
-    end                               
+    end
   end
 end
