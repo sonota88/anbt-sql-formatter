@@ -1,3 +1,13 @@
+# 0.0.7 (2018-08-11)
+
+No breaking changes.
+
+## Feattues
+
+- New configuration parameter `Rule#in_values_num`
+  for controlling number of values in IN clause per line.
+
+
 # 0.0.6 (2018-03-31)
 
 No breaking changes.
