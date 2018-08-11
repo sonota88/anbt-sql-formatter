@@ -5,13 +5,8 @@ begin
   require "anbt-sql-formatter/formatter"
 rescue LoadError
   $LOAD_PATH << File.expand_path(
-                                 File.join(
-                                           __FILE__,
-                                           "..",
-                                           "..",
-                                           "lib"
-                                           )
-                                 )
+    File.join(__FILE__, "..", "..", "lib")
+  )
   require "anbt-sql-formatter/formatter"
 end
 
@@ -36,7 +31,6 @@ def main
     rule.function_names << func_name.upcase
   }
 
-  #rule.indentString = "('-')"
   rule.indent_string = "    "
   
   formatter = AnbtSql::Formatter.new(rule)

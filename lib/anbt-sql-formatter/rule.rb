@@ -32,15 +32,24 @@ class AnbtSql
     attr_accessor :kw_nl_x
     attr_accessor :kw_nl_x_plus1_indent
 
+    # Limit number of values per line in IN clause to this value.
+    #
+    # nil:: one value per line (default)
+    # n (>=2):: n values per line
+    # ONELINE_IN_VALUES_NUM:: all values in one line
+    attr_accessor :in_values_num
+
     # キーワードの変換規則: 何もしない
     KEYWORD_NONE = 0
 
     # キーワードの変換規則: 大文字にする
     KEYWORD_UPPER_CASE = 1
-    
+
     # キーワードの変換規則: 小文字にする
     KEYWORD_LOWER_CASE = 2
 
+    # IN の値を一行表示する場合の in_values_num 値
+    ONELINE_IN_VALUES_NUM = 0
 
     def initialize
       # キーワードの変換規則.
@@ -51,7 +60,7 @@ class AnbtSql
       @indent_string = "    "
 
       @space_after_comma = false
-      
+
       # __foo
       # ____KW
       @kw_plus1_indent_x_nl = %w(INSERT INTO CREATE DROP TRUNCATE TABLE CASE)
@@ -65,12 +74,12 @@ class AnbtSql
       # __foo
       # ____KW
       @kw_nl_x_plus1_indent = %w(ON USING)
-      
+
       # __foo
       # __KW
       @kw_nl_x = %w(OR THEN ELSE)
       # @kw_nl_x = %w(OR WHEN ELSE)
-      
+
       @kw_multi_words = ["ORDER BY", "GROUP BY"]
 
       # 関数の名前。
@@ -117,7 +126,7 @@ class AnbtSql
           return true
         end
       end
-      
+
       return false
     end
   end
