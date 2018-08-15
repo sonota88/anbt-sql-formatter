@@ -2,7 +2,7 @@
 
 No breaking changes.
 
-## Feattues
+## Features
 
 - New configuration parameter `Rule#in_values_num`
   for controlling number of values in IN clause per line.
