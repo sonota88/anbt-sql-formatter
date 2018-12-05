@@ -308,6 +308,21 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       msg + "minus + non-number",
       strip_indent(
         <<-EOB
+        name ("admin"."test")
+        EOB
+      ),
+      _format( @parser.parse( strip_indent(
+        <<-EOB
+        "admin"."test"
+        EOB
+      )))
+    )
+
+    ########
+    assert_equals(
+      msg + "minus + non-number",
+      strip_indent(
+        <<-EOB
         symbol (-)
         name (a)
         EOB
