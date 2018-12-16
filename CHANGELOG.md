@@ -1,3 +1,31 @@
+# 0.1.0 (2018-12-16)
+
+## Breaking changes
+
+- Improve tokenizer: recognize double quoted `"{schema}"."{table}"` notation as a single name token.
+  This affects formatted output:
+
+```
+echo '
+  select a
+  from b.c, "d"."e"
+' | bin/anbt-sql-formatter
+
+(before)
+SELECT
+        a
+    FROM
+        b.c
+        ,"d" . "e"
+
+(after)
+SELECT
+        a
+    FROM
+        b.c
+        ,"d"."e"
+```
+
 # 0.0.7 (2018-08-11)
 
 No breaking changes.
