@@ -64,7 +64,9 @@ These are exclusive:
         ## end double quote
          
         length = $1.size
-        if /\A("")/ =~ str ## escaped double quote
+        if /\A(".")/ =~ str ## schema.table
+          shift_to_buf(3)
+        elsif /\A("")/ =~ str ## escaped double quote
           shift_to_buf(2)
         else
           shift_token(length, :quote_double, :plain, :end)
