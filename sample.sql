@@ -118,3 +118,7 @@ foobar(a)
 foobar(a,b)
 ;
 
+--------------------------------
+-- {schema}.{table}, {table}.{column}
+select t1.a, `t2`.`b`, "t3"."c"
+from schema.t1, `schema`.`t2`, "schema"."t3"
