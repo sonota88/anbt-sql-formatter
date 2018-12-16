@@ -95,7 +95,7 @@ sonota:: Ruby へ移植
 
 == テスト
 
- $ ruby setup.rb test
+ $ ./test.sh
 
 
 == その他

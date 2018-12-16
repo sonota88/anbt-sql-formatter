@@ -55,4 +55,4 @@ Following are Authors of BlancoSqlFormatter(original Java version).
 
 == Test
 
- $ ruby setup.rb test
+ $ ./test.sh
