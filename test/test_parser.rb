@@ -305,6 +305,21 @@ class TestAnbtSqlParser < Test::Unit::TestCase
 
     ########
     assert_equals(
+      msg + "double-quoted schema and table",
+      strip_indent(
+        <<-EOB
+        name ("admin"."test")
+        EOB
+      ),
+      _format( @parser.parse( strip_indent(
+        <<-EOB
+        "admin"."test"
+        EOB
+      )))
+    )
+
+    ########
+    assert_equals(
       msg + "minus + non-number",
       strip_indent(
         <<-EOB

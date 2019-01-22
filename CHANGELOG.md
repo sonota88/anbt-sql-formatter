@@ -1,8 +1,33 @@
+# 0.1.0 (2018-12-16)
+
+## Breaking changes
+
+- Support `"{schema}"."{table}"` notation.
+  - Tokenize as a single name token. This affects formatter output:
+
+```
+echo 'select a from b.c, "d"."e"' | bin/anbt-sql-formatter
+
+(before)
+SELECT
+        a
+    FROM
+        b.c
+        ,"d" . "e"
+
+(after)
+SELECT
+        a
+    FROM
+        b.c
+        ,"d"."e"
+```
+
 # 0.0.7 (2018-08-11)
 
 No breaking changes.
 
-## Feattues
+## Features
 
 - New configuration parameter `Rule#in_values_num`
   for controlling number of values in IN clause per line.

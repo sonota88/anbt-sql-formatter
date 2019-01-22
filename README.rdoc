@@ -1,6 +1,6 @@
 = anbt-sql-formatter
 
-(C) 2010 sonota (yosiot8753@gmail.com)
+(C) 2010-2018 sonota88 (yosiot8753@gmail.com)
 
 
 == Description
@@ -55,4 +55,4 @@ Following are Authors of BlancoSqlFormatter(original Java version).
 
 == Test
 
- $ ruby setup.rb test
+ $ ./test.sh

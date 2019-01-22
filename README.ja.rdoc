@@ -1,6 +1,6 @@
 = anbt-sql-formatter
 
-(C) 2010 sonota <yosiot8753@gmail.com>
+(C) 2010-2018 sonota88 <yosiot8753@gmail.com>
 
 
 == 概要
@@ -95,7 +95,7 @@ sonota:: Ruby へ移植
 
 == テスト
 
- $ ruby setup.rb test
+ $ ./test.sh
 
 
 == その他
