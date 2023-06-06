@@ -6,7 +6,7 @@ AnbtSqlFormatter: SQL整形ツール. SQL文を決められたルールに従い
 フォーマットを実施するためには、入力されるSQLがSQL文として妥当であることが前提条件となります。
 
 このクラスが準拠するSQL整形のルールについては、下記URLを参照ください。
-http://homepage2.nifty.com/igat/igapyon/diary/2005/ig050613.html
+https://www.igapyon.jp/igapyon/diary/2005/ig050613.html
 
 このクラスには ANSI SQLの予約語一覧が蓄えられます。
 
