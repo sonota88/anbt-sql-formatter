@@ -49,7 +49,7 @@ SELECT
     )
 EOS
 
-     assert_equals(msg, expected.strip, @fmt.format(sql))
+    assert_equals(msg, expected.strip, @fmt.format(sql))
   end
 
   def test_format_num_in_values
@@ -78,7 +78,7 @@ SELECT
     )
 EOS
 
-     assert_equals(msg, expected.strip, @fmt.format(sql))
+    assert_equals(msg, expected.strip, @fmt.format(sql))
   end
 
   def test_format_str_in_values
@@ -107,7 +107,7 @@ SELECT
     )
 EOS
 
-     assert_equals(msg, expected.strip, @fmt.format(sql))
+    assert_equals(msg, expected.strip, @fmt.format(sql))
   end
 
   def test_format_oneline_in_values
@@ -127,7 +127,7 @@ SELECT
     )
 EOS
 
-     assert_equals(msg, expected.strip, @fmt.format(sql))
+    assert_equals(msg, expected.strip, @fmt.format(sql))
   end
 
   def test_format_with_space_after_comma
@@ -157,7 +157,7 @@ SELECT
     )
 EOS
 
-     assert_equals(msg, expected.strip, @fmt.format(sql))
+    assert_equals(msg, expected.strip, @fmt.format(sql))
   end
 
   def test_format_ignore_in_values_compact_when_select
@@ -180,7 +180,7 @@ SELECT
     )
 EOS
 
-     assert_equals(msg, expected.strip, @fmt.format(sql))
+    assert_equals(msg, expected.strip, @fmt.format(sql))
   end
 
   private

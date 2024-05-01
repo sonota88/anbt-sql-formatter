@@ -98,7 +98,7 @@ class AnbtSql
           is_next_char_space = false
           if @pos + 1 < @before.size &&
             space?(char_at(@before, @pos+1))
-              is_next_char_space = true
+            is_next_char_space = true
           end
 
           if not is_next_char_space

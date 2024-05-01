@@ -91,7 +91,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     tokens = @fmt.format_list(tokens)
     assert_equals(
       msg + "format_list()",
-    strip_indent(
+      strip_indent(
         <<-EOB
         symbol ((+))
         EOB

@@ -34,8 +34,8 @@ class TestAnbtSqlParser < Test::Unit::TestCase
 
   def test_letter?
     msg = "letter? - "
-     assert_equals( msg, false, @parser.letter?("'") )
-     assert_equals( msg, false, @parser.letter?('"') )
+    assert_equals( msg, false, @parser.letter?("'") )
+    assert_equals( msg, false, @parser.letter?('"') )
   end
 
 

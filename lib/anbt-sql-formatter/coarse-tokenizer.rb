@@ -88,7 +88,7 @@ These are exclusive:
         if /\A('')/ =~ @str ## escaped single quote
           shift_to_buf(2)
         else
-        shift_token(length, :quote_single, :plain, :end)
+          shift_token(length, :quote_single, :plain, :end)
           out_of_quote_single = true
         end
         
