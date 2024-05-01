@@ -21,7 +21,7 @@ class TestCoarseTokenizer < Test::Unit::TestCase
     }.join("\n")
   end
 
-  
+
   def test_shift_to_buf
     @tok.buf = ""
     @tok.str = "abcdefg"
@@ -52,14 +52,14 @@ class TestCoarseTokenizer < Test::Unit::TestCase
     @tok.result = []
     @tok.buf = "'ABC"
     @tok.str = "'def"
-    
+
     @tok.shift_token(1, :comment, :plain, :end)
     assert_equals( msg,  :comment, @tok.result.last._type)
     assert_equals( msg,  "'ABC'", @tok.result.last.string)
     assert_equals( msg,  "", @tok.buf)
     assert_equals( msg,  "def", @tok.str)
   end
-  
+
 
   def test_tokenize_1
     assert_equals(
@@ -327,7 +327,7 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       )))
     )
   end
-  
+
 
   def test_comment_in_string_1
     assert_equals(
@@ -392,7 +392,7 @@ class TestCoarseTokenizer < Test::Unit::TestCase
       )))
     )
   end
-  
+
 
   def test_string_escape_1
     assert_equals(

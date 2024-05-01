@@ -8,7 +8,7 @@ require "anbt-sql-formatter/formatter"
 =begin
 rule のプロパティを修正するだけではなく
 さらに踏み込んでカスタマイズしたい場合は
-formatter.rb 内の AnbtSql::Formatter#format_list_main_loop 
+formatter.rb 内の AnbtSql::Formatter#format_list_main_loop
 などをオーバーライドすると良いでしょう。
 
 Ruby に詳しくない場合は「Ruby オープンクラス」
@@ -39,7 +39,7 @@ if $0 == __FILE__
 
   # キーワードを大文字・小文字に変換しない
   rule.keyword = AnbtSql::Rule::KEYWORD_NONE
-  
+
   # 複数単語のキーワードを登録
   rule.kw_multi_words << "INNER JOIN"
   rule.kw_nl_x << "INNER JOIN"
@@ -50,7 +50,7 @@ if $0 == __FILE__
   rule.kw_nl_x << "WHEN"
 
   # User defined additional functions:
-  # ユーザ定義関数の追加: 
+  # ユーザ定義関数の追加:
   %w(count sum substr date).each{|func_name|
     rule.function_names << func_name.upcase
   }
@@ -58,7 +58,7 @@ if $0 == __FILE__
   #rule.indent_string = "    "
   #rule.indent_string = "('-')"
   rule.indent_string = "|   "
-  
+
   formatter = AnbtSql::Formatter.new(rule)
   result = formatter.format(src)
   print result

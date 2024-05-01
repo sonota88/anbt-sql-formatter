@@ -100,10 +100,10 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     )
   end
 
-  
+
   def test_remove_symbol_side_space
     msg = "remove_symbol_side_space - "
-    
+
     ########
     tokens = @parser.parse("a (b")
     @fmt.remove_symbol_side_space(tokens)
@@ -150,11 +150,11 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
   end
- 
+
 
   def test_special_treatment_for_parenthesis_with_one_element
     msg = "special_treatment_for_parenthesis_with_one_element - "
-    
+
     ########
     tokens = @parser.parse("( 1 )")
     @fmt.special_treatment_for_parenthesis_with_one_element(tokens)
@@ -186,7 +186,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
   end
- 
+
 
   def test_insert_space_between_tokens
     msg = "insert_space_between_tokens - "
@@ -204,7 +204,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
-  
+
     ########
     tokens = @parser.parse("=b")
     @fmt.insert_space_between_tokens(tokens)
@@ -220,15 +220,15 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     )
   end
 
-  
+
   def test_insert_return_and_indent
     msg = "insert_return_and_indent - "
 
     ########
     tokens = @parser.parse("foo bar")
-    
+
     index, indent_depth = 1, 1
-    
+
     assert_equals(
       msg + "before",
       strip_indent(
@@ -240,7 +240,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
-    
+
     result = @fmt.insert_return_and_indent(tokens, index, indent_depth)
 
     assert_equals(
@@ -258,9 +258,9 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     ########
     # msg = "" #"後の空白を置き換え"
     tokens = @parser.parse("select foo")
-    
+
     index, indent_depth = 1, 1
-    
+
     assert_equals(
       msg + "before",
       strip_indent(
@@ -272,7 +272,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
-    
+
     result = @fmt.insert_return_and_indent(tokens, index, indent_depth)
 
     assert_equals(
@@ -291,7 +291,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     msg = "" #"前の空白を置き換え"
     tokens = @parser.parse("select foo")
     index, indent_depth = 2, 1
-    
+
     assert_equals(
       msg + "before",
       strip_indent(
@@ -303,7 +303,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
-    
+
     result = @fmt.insert_return_and_indent(tokens, index, indent_depth)
     assert_equals(
       msg + "", 0, result)
@@ -324,7 +324,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     msg = "indent depth = 2"
     tokens = @parser.parse("foo bar")
     index, indent_depth = 1, 2
-    
+
     assert_equals(
       msg + "before",
       strip_indent(
@@ -336,7 +336,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
-    
+
     result = @fmt.insert_return_and_indent(tokens, index, indent_depth)
 
     assert_equals(
@@ -398,7 +398,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     # #pp tokens
     # index = 1
     # result = @fmt.insert_return_and_indent(tokens, index, 1)
-    
+
     # assert_equals(msg + "", 1, result, msg)
 
     ########
@@ -407,7 +407,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
 
     index = 10
     result = @fmt.insert_return_and_indent(tokens, index, 1)
-    
+
     assert_equals(msg + "", 0, result)
   end ## insert_return_and_indent
 
@@ -418,7 +418,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     ########
     func_name = "TEST_FUNCTION"
     @rule.function_names << func_name
-    
+
     assert_equals(
       msg + "function with parenthesis",
       strip_indent(
@@ -429,9 +429,9 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       @fmt.format("select #{func_name}(*)")
     )
-    
+
     @rule.function_names.delete func_name
-    
+
     ########
     assert_equals(
       msg + "Next line of single commnet",

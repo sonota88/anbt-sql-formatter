@@ -58,11 +58,11 @@ These are exclusive:
         length = $1.size
         shift_token(length, :plain, :quote_double, :start)
         out_of_quote_double = false
-        
+
       elsif /\A(")/ =~ str && !(out_of_quote_double) &&
           out_of_quote_single && out_of_comment_single && out_of_comment_multi
         ## end double quote
-         
+
         length = $1.size
         if /\A(".")/ =~ str ## schema.table
           shift_to_buf(3)
@@ -76,7 +76,7 @@ These are exclusive:
       elsif /\A(')/ =~ str && out_of_quote_single &&
           out_of_quote_double && out_of_comment_single && out_of_comment_multi
         ## begin single quote
-        
+
         length = $1.size
         shift_token(length, :plain, :quote_single, :start)
         out_of_quote_single = false
@@ -91,11 +91,11 @@ These are exclusive:
           shift_token(length, :quote_single, :plain, :end)
           out_of_quote_single = true
         end
-        
+
       elsif /\A(#{@comment_single_start})/ =~ str && out_of_comment_single &&
          out_of_quote_single && out_of_quote_double && out_of_comment_multi
         ## begin single line comment
-        
+
         length = $1.size
         shift_token(length, :plain, :comment_single, :start)
         out_of_comment_single = false
@@ -103,7 +103,7 @@ These are exclusive:
       elsif /\A(\n)/ =~ str && !(out_of_comment_single) &&
           out_of_quote_single && out_of_quote_double && out_of_comment_multi
         ## end single line comment
-       
+
         length = $1.size
         shift_token(length, :comment_single, :plain, :end)
         out_of_comment_single = true
@@ -111,7 +111,7 @@ These are exclusive:
       elsif /\A(#{@comment_multi_start})/ =~ str &&
           out_of_quote_single && out_of_quote_double && out_of_comment_single && out_of_comment_multi
         ## begin multi line comment
-        
+
         length = $1.size
         shift_token(length, :plain, :comment_multi, :start)
         out_of_comment_multi = false
@@ -119,7 +119,7 @@ These are exclusive:
       elsif /\A(#{@comment_multi_end})/ =~ str &&
           out_of_quote_single && out_of_quote_double && out_of_comment_single && !(out_of_comment_multi)
         ## end multi line comment
-        
+
         length = $1.size
         shift_token(length, :comment_multi, :plain, :end)
         out_of_comment_multi = true
@@ -130,7 +130,7 @@ These are exclusive:
 
       else
         shift_to_buf(1)
-        
+
       end
     end
     @result << CoarseToken.new(@mode, @buf+@str) if (@buf+@str).size > 0
@@ -143,8 +143,8 @@ These are exclusive:
     @buf << @str[0...n]
     @str[0...n] = ""
   end
-  
-  
+
+
   def shift_token(length, type, mode, flag)
     case flag
     when :start
