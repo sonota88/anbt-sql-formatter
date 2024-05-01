@@ -466,7 +466,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
         b
         EOB
       ))
-    );
+    )
 
     ########
     assert_equals(
@@ -484,7 +484,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
         a;b
         EOB
       ))
-    );
+    )
 
     ########
     assert_equals(
