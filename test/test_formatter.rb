@@ -20,6 +20,17 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     Helper.format_tokens(tokens)
   end
 
+  def token_new(type, string)
+    type_map = {
+      name: AnbtSql::TokenConstants::NAME,
+      space: AnbtSql::TokenConstants::SPACE
+    }
+    _type = type_map.fetch(type)
+
+    AnbtSql::Token.new(_type, string)
+  end
+
+
   def test_modify_keyword_case
     msg = "upcase"
 
@@ -391,19 +402,38 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     )
 =end
 
-    # ########
-    # msg = "指定した index に対して tokens[index] が存在するので 1 を返すべき"
-    # 間違い。tokens[index] が存在していても 1 を返すとは限らない。
-    # tokens = parser.parse("foo bar")
-    # #pp tokens
-    # index = 1
-    # result = @fmt.insert_return_and_indent(tokens, index, 1)
+    ########
+    msg = "insert: return 1"
+    tokens = [
+      token_new(:name, "foo"),
+      token_new(:name, "bar")
+    ]
 
-    # assert_equals(msg + "", 1, result, msg)
+    index = 1
+    result = @fmt.insert_return_and_indent(tokens, index, 1)
+
+    assert_equals(msg + "", 1, result)
 
     ########
-    msg = "指定した index に対して tokens[index] が存在しないので 0 を返すべき"
-    tokens = @parser.parse("foo bar")
+    msg = "replace: return 0"
+    tokens = [
+      token_new(:name, "foo"),
+      token_new(:space, " "),
+      token_new(:name, "bar")
+    ]
+
+    index = 2
+    result = @fmt.insert_return_and_indent(tokens, index, 1)
+
+    assert_equals(msg + "", 0, result)
+
+    ########
+    msg = "out of bounds"
+    tokens = [
+      token_new(:name, "foo"),
+      token_new(:space, " "),
+      token_new(:name, "bar")
+    ]
 
     index = 10
     result = @fmt.insert_return_and_indent(tokens, index, 1)
