@@ -379,30 +379,6 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     )
 
     ########
-=begin
-    msg = "FROM の前で改行"
-
-    assert_equals(
-      msg + "",
-      strip_indent(
-        <<-EOB
-        SELECT
-        <-indent-><-indent->aa
-        <-indent-><-indent->,bb
-        <-indent-><-indent->,cc
-        <-indent-><-indent->,dd
-        <-indent-><-indent->,ee
-        <-indent->FROM
-        <-indent-><-indent->foo
-        ;
-        EOB
-      ),
-#       _format(tokens),
-      @fmt.format("SELECT aa ,bb ,cc ,dd ,ee FROM foo;")
-    )
-=end
-
-    ########
     msg = "insert: return 1"
     tokens = [
       token_new(:name, "foo"),
