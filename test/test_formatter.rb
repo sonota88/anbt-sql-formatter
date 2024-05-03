@@ -434,7 +434,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
 
     ########
     assert_equals(
-      msg + "Next line of single commnet",
+      msg + "Next line of single comment",
       strip_indent(
         <<-EOB
         SELECT
@@ -488,7 +488,7 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
 
     ########
     assert_equals(
-      msg + "two line breaks after semicolon",
+      msg + "no line breaks after semicolon",
       strip_indent(
         <<-EOB
         a

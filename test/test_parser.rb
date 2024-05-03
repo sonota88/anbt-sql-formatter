@@ -320,7 +320,7 @@ class TestAnbtSqlParser < Test::Unit::TestCase
 
     ########
     assert_equals(
-      msg + "minus + non-number",
+      msg + "name with dot",
       strip_indent(
         <<-EOB
         name ("admin"."test")
