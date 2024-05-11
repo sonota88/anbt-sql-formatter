@@ -77,14 +77,12 @@ class TestAnbtSqlParser < Test::Unit::TestCase
 
   ##
   # コメントと文字列のテストは coarse tokenize で行う。
-  def test_next_sql_token
-    msg = "token type recognition"
+  sub_test_case "next_sql_token" do
+    test "space 010" do
 
-    ########
     @parser.before = " "
     @parser.pos = 0
-    assert_equals(
-      msg + "space",
+    assert_equal(
       strip_indent(
         <<-EOB
         space ( )
@@ -93,11 +91,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "symbol 010" do
+
     @parser.before = "!="
     @parser.pos = 0
-    assert_equals(
-      msg + "!=",
+    assert_equal(
       strip_indent(
         <<-EOB
         symbol (!=)
@@ -106,12 +106,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
+    end
 
-    ########
+    test "pos = 1" do
+
     @parser.before = "a b"
     @parser.pos = 1
-    assert_equals(
-      msg + "space",
+    assert_equal(
       strip_indent(
         <<-EOB
         space ( )
@@ -120,11 +121,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "symbol 020" do
+
     @parser.before = ","
     @parser.pos = 0
-    assert_equals(
-      msg + "symbol",
+    assert_equal(
       strip_indent(
         <<-EOB
         symbol (,)
@@ -133,11 +136,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "keyword 010" do
+
     @parser.before = "select"
     @parser.pos = 0
-    assert_equals(
-      msg + "keyword: select",
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (select)
@@ -146,11 +151,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "keyword 020" do
+
     @parser.before = "case"
     @parser.pos = 0
-    assert_equals(
-      msg + "keyword: case",
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (case)
@@ -159,11 +166,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "name 010" do
+
     @parser.before = "xxx123"
     @parser.pos = 0
-    assert_equals(
-      msg + "name",
+    assert_equal(
       strip_indent(
         <<-EOB
         name (xxx123)
@@ -172,11 +181,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "value 010" do
+
     @parser.before = '123'
     @parser.pos = 0
-    assert_equals(
-      msg + "value",
+    assert_equal(
       strip_indent(
         <<-EOB
         value (123)
@@ -185,11 +196,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "value 020" do
+
     @parser.before = '1.23'
     @parser.pos = 0
-    assert_equals(
-      msg + "value",
+    assert_equal(
       strip_indent(
         <<-EOB
         value (1.23)
@@ -198,11 +211,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "value 030" do
+
     @parser.before = '-1.23 '
     @parser.pos = 0
-    assert_equals(
-      msg + "value",
+    assert_equal(
       strip_indent(
         <<-EOB
         value (-1.23)
@@ -211,11 +226,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "value 040" do
+
     @parser.before = '1.23e45 '
     @parser.pos = 0
-    assert_equals(
-      msg + "value",
+    assert_equal(
       strip_indent(
         <<-EOB
         value (1.23e45)
@@ -224,11 +241,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "value 050" do
+
     @parser.before = '1.23e-45 '
     @parser.pos = 0
-    assert_equals(
-      msg + "value",
+    assert_equal(
       strip_indent(
         <<-EOB
         value (1.23e-45)
@@ -237,11 +256,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "value 060" do
+
     @parser.before = '-1.23e-45 '
     @parser.pos = 0
-    assert_equals(
-      msg + "value",
+    assert_equal(
       strip_indent(
         <<-EOB
         value (-1.23e-45)
@@ -250,11 +271,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "value 070" do
+
     @parser.before = '0x01 '
     @parser.pos = 0
-    assert_equals(
-      msg + "value",
+    assert_equal(
       strip_indent(
         <<-EOB
         value (0x01)
@@ -263,11 +286,13 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       _format([ @parser.next_sql_token ])
     )
 
-    ########
+    end
+
+    test "value 080" do
+
     @parser.before = '1x'
     @parser.pos = 0
-    assert_equals(
-      msg + "value",
+    assert_equal(
       strip_indent(
         <<-EOB
         value (1)
@@ -275,15 +300,15 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       ),
       _format([ @parser.next_sql_token ])
     )
+
+    end
   end
 
 
-  def test_parser
-    msg = "parser basic case - "
+  sub_test_case "parser" do
+    test "basic case" do
 
-    ########
-    assert_equals(
-      msg + "",
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (select)
@@ -303,9 +328,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "double-quoted schema and table",
+    end
+
+    test "double-quoted schema and table" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         name ("admin"."test")
@@ -318,9 +345,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "name with dot",
+    end
+
+    test "name with dot" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         name ("admin"."test")
@@ -333,9 +362,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "minus + non-number",
+    end
+
+    test "minus + non-number" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         symbol (-)
@@ -349,9 +380,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "single comment",
+    end
+
+    test "single comment" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (select)
@@ -369,9 +402,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "parenthesis in single quote",
+    end
+
+    test "parenthesis in single quote" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         value ('()')
@@ -384,9 +419,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "parenthesis in double quote",
+    end
+
+    test "parenthesis in double quote" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         name ("()")
@@ -399,9 +436,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "multiple line comment: 1",
+    end
+
+    test "multiple line comment: 1" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         name (aa)
@@ -416,9 +455,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "multiple line comment: 2",
+    end
+
+    test "multiple line comment: 2" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         name (aa)
@@ -435,9 +476,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "invalid paired double quote",
+    end
+
+    test "invalid paired double quote" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         name (aa)
@@ -451,9 +494,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "multiwords keyword",
+    end
+
+    test "multiwords keyword" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (group by)
@@ -466,9 +511,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "multiwords keyword 2",
+    end
+
+    test "multiwords keyword 2" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         name (a)
@@ -485,9 +532,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "multiwords keyword 3",
+    end
+
+    test "multiwords keyword 3" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (select)
@@ -502,9 +551,11 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
-    ########
-    assert_equals(
-      msg + "multiwords keyword 4",
+    end
+
+    test "multiwords keyword 4" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (select)
@@ -519,5 +570,6 @@ class TestAnbtSqlParser < Test::Unit::TestCase
       )))
     )
 
+    end
   end
 end

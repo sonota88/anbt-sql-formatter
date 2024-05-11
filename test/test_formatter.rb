@@ -31,16 +31,14 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
   end
 
 
-  def test_modify_keyword_case
-    msg = "upcase"
+  sub_test_case "modify_keyword_case" do
+    test "upper case" do
 
-    ########
     @rule.keyword = AnbtSql::Rule::KEYWORD_UPPER_CASE
 
     tokens = @parser.parse("select")
     @fmt.modify_keyword_case(tokens)
-    assert_equals(
-      msg + "",
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (SELECT)
@@ -49,14 +47,15 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
-    ########
-    msg = "downcase"
+    end
+
+    test "lower case" do
+
     @rule.keyword = AnbtSql::Rule::KEYWORD_LOWER_CASE
 
     tokens = @parser.parse("SELECT")
     @fmt.modify_keyword_case(tokens)
-    assert_equals(
-      msg + "",
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (select)
@@ -64,17 +63,17 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
+
+    end
   end
 
 
-  def test_concat_operator_for_oracle
-    msg = "concat_operator_for_oracle - "
+  sub_test_case "concat_operator_for_oracle" do
+    test "length is less than 3, should do nothing" do
 
-    ########
     tokens = @parser.parse("a+")
     @fmt.concat_operator_for_oracle(tokens)
-    assert_equals(
-      msg + "length is less than 3, should do nothing",
+    assert_equal(
       strip_indent(
         <<-EOB
         name (a)
@@ -84,11 +83,13 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
-    ########
+    end
+
+    test "basic" do
+
     tokens = @parser.parse("(+)")
     @fmt.concat_operator_for_oracle(tokens)
-    assert_equals(
-      msg + "",
+    assert_equal(
       strip_indent(
         <<-EOB
         symbol ((+))
@@ -97,11 +98,13 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
-    ########
+    end
+
+    test "format_list" do
+
     tokens = @parser.parse("(+)")
     tokens = @fmt.format_list(tokens)
-    assert_equals(
-      msg + "format_list()",
+    assert_equal(
       strip_indent(
         <<-EOB
         symbol ((+))
@@ -109,17 +112,17 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
+
+    end
   end
 
 
-  def test_remove_symbol_side_space
-    msg = "remove_symbol_side_space - "
+  sub_test_case "remove_symbol_side_space" do
+    test "a (b" do
 
-    ########
     tokens = @parser.parse("a (b")
     @fmt.remove_symbol_side_space(tokens)
-    assert_equals(
-      msg + "",
+    assert_equal(
       strip_indent(
         <<-EOB
         name (a)
@@ -130,27 +133,13 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
+    end
 
-    ########
+    test "a( b" do
+
     tokens = @parser.parse("a( b")
     @fmt.remove_symbol_side_space(tokens)
-    assert_equals(
-      msg + "", strip_indent(
-        <<-EOB
-        name (a)
-        symbol (()
-        name (b)
-        EOB
-      ),
-      _format(tokens)
-    )
-
-
-    ########
-    tokens = @parser.parse("a ( b")
-    @fmt.remove_symbol_side_space(tokens)
-    assert_equals(
-      msg + "",
+    assert_equal(
       strip_indent(
         <<-EOB
         name (a)
@@ -160,17 +149,34 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
+
+    end
+
+    test "a ( b" do
+
+    tokens = @parser.parse("a ( b")
+    @fmt.remove_symbol_side_space(tokens)
+    assert_equal(
+      strip_indent(
+        <<-EOB
+        name (a)
+        symbol (()
+        name (b)
+        EOB
+      ),
+      _format(tokens)
+    )
+
+    end
   end
 
 
-  def test_special_treatment_for_parenthesis_with_one_element
-    msg = "special_treatment_for_parenthesis_with_one_element - "
+  sub_test_case "special_treatment_for_parenthesis_with_one_element" do
+    test "one element, should not separate" do
 
-    ########
     tokens = @parser.parse("( 1 )")
     @fmt.special_treatment_for_parenthesis_with_one_element(tokens)
-    assert_equals(
-      msg + "one element, should not separate",
+    assert_equal(
       strip_indent(
         <<-EOB
         symbol ((1))
@@ -179,12 +185,13 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
+    end
 
-    ########
+    test "more than one element, should separate" do
+
     tokens = @parser.parse("(1,2)")
     @fmt.special_treatment_for_parenthesis_with_one_element(tokens)
-    assert_equals(
-      msg + "more than one element, should separate",
+    assert_equal(
       strip_indent(
         <<-EOB
         symbol (()
@@ -196,16 +203,17 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
+
+    end
   end
 
 
-  def test_insert_space_between_tokens
-    msg = "insert_space_between_tokens - "
+  sub_test_case "insert_space_between_tokens" do
+    test "a=" do
 
-    ########
     tokens = @parser.parse("a=")
     @fmt.insert_space_between_tokens(tokens)
-    assert_equals(msg,
+    assert_equal(
       strip_indent(
         <<-EOB
         name (a)
@@ -216,10 +224,13 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
-    ########
+    end
+
+    test "=b" do
+
     tokens = @parser.parse("=b")
     @fmt.insert_space_between_tokens(tokens)
-    assert_equals(msg,
+    assert_equal(
       strip_indent(
         <<-EOB
         symbol (=)
@@ -229,13 +240,15 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       _format(tokens)
     )
+
+    end
   end
 
 
-  def test_insert_return_and_indent
-    msg = "insert_return_and_indent - "
+  sub_test_case "insert_return_and_indent" do
+    test "basic" do
 
-    ########
+    msg = "basic - "
     tokens = @parser.parse("foo bar")
 
     index, indent_depth = 1, 1
@@ -266,8 +279,11 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
-    ########
-    # msg = "" #"後の空白を置き換え"
+    end
+
+    test "replace: after" do
+
+    msg = "replace: after - " # 後の空白を置き換え
     tokens = @parser.parse("select foo")
 
     index, indent_depth = 1, 1
@@ -298,8 +314,11 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
-    ########
-    msg = "" #"前の空白を置き換え"
+    end
+
+    test "replace: before" do
+
+    msg = "replace: before - " # 前の空白を置き換え
     tokens = @parser.parse("select foo")
     index, indent_depth = 2, 1
 
@@ -331,8 +350,11 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
-    ########
-    msg = "indent depth = 2"
+    end
+
+    test "indent depth = 2" do
+
+    msg = "indent depth = 2 - "
     tokens = @parser.parse("foo bar")
     index, indent_depth = 1, 2
 
@@ -362,12 +384,13 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
-    ########
-    msg = "kw, nl, kw"
+    end
+
+    test "kw, nl, kw" do
+
     tokens = @parser.parse("select\ncase")
 
-    assert_equals(
-      msg + "",
+    assert_equal(
       strip_indent(
         <<-EOB
         keyword (select)
@@ -378,8 +401,10 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       _format(tokens)
     )
 
-    ########
-    msg = "insert: return 1"
+    end
+
+    test "insert: return 1" do
+
     tokens = [
       token_new(:name, "foo"),
       token_new(:name, "bar")
@@ -388,10 +413,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     index = 1
     result = @fmt.insert_return_and_indent(tokens, index, 1)
 
-    assert_equals(msg + "", 1, result)
+    assert_equal(1, result)
 
-    ########
-    msg = "replace: return 0"
+    end
+
+    test "replace: return 0" do
+
     tokens = [
       token_new(:name, "foo"),
       token_new(:space, " "),
@@ -401,10 +428,12 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     index = 2
     result = @fmt.insert_return_and_indent(tokens, index, 1)
 
-    assert_equals(msg + "", 0, result)
+    assert_equal(0, result)
 
-    ########
-    msg = "out of bounds"
+    end
+
+    test "out of bounds" do
+
     tokens = [
       token_new(:name, "foo"),
       token_new(:space, " "),
@@ -414,19 +443,19 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     index = 10
     result = @fmt.insert_return_and_indent(tokens, index, 1)
 
-    assert_equals(msg + "", 0, result)
+    assert_equal(0, result)
+
+    end
   end ## insert_return_and_indent
 
 
-  def test_format
-    msg = "format - "
+  sub_test_case "format" do
+    test "function with parenthesis" do
 
-    ########
     func_name = "TEST_FUNCTION"
     @rule.function_names << func_name
 
-    assert_equals(
-      msg + "function with parenthesis",
+    assert_equal(
       strip_indent(
         <<-EOB
         SELECT
@@ -438,9 +467,11 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
 
     @rule.function_names.delete func_name
 
-    ########
-    assert_equals(
-      msg + "Next line of single comment",
+    end
+
+    test "Next line of single comment" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         SELECT
@@ -457,9 +488,11 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ))
     )
 
-    ########
-    assert_equals(
-      msg + "new line after single line comment",
+    end
+
+    test "new line after single line comment" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         --a
@@ -474,9 +507,11 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ))
     )
 
-    ########
-    assert_equals(
-      msg + "two line breaks after semicolon",
+    end
+
+    test "two line breaks after semicolon" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         a
@@ -492,9 +527,11 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ))
     )
 
-    ########
-    assert_equals(
-      msg + "no line breaks after semicolon",
+    end
+
+    test "no line breaks after semicolon" do
+
+    assert_equal(
       strip_indent(
         <<-EOB
         a
@@ -503,6 +540,8 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
       ),
       @fmt.format("a;")
     )
+
+    end
   end
 
   def test_format_between
@@ -518,65 +557,67 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
   end
 
 
-  def test_split_to_statements
-    msg = "split_to_statements - "
+  sub_test_case "split_to_statements" do
+    test "a;b" do
 
-    ########
     tokens = @parser.parse("a;b")
     statements = @fmt.split_to_statements(tokens)
 
     assert_equal(2, statements.size)
-    assert_equals(
-      msg,
+    assert_equal(
       "name (a)",
       _format( statements[0] )
     )
-    assert_equals(
-      msg,
+    assert_equal(
       "name (b)",
       _format( statements[1] )
     )
 
-    ########
+    end
+
+    test ";" do
+
     tokens = @parser.parse(";")
     statements = @fmt.split_to_statements(tokens)
-    assert_equals(
-      msg,
+    assert_equal(
       [],
       statements[0]
     )
-    assert_equals(
-      msg,
+    assert_equal(
       [],
       statements[1]
     )
 
-    ########
+    end
+
+    test "a;" do
+
     tokens = @parser.parse("a;")
     statements = @fmt.split_to_statements(tokens)
-    assert_equals(
-      msg,
+    assert_equal(
       "name (a)",
       _format( statements[0] )
     )
-    assert_equals(
-      msg,
+    assert_equal(
       [],
       statements[1]
     )
 
-    ########
+    end
+
+    test ";a" do
+
     tokens = @parser.parse(";a")
     statements = @fmt.split_to_statements(tokens)
-    assert_equals(
-      msg,
+    assert_equal(
       [],
       statements[0]
     )
-    assert_equals(
-      msg,
+    assert_equal(
       "name (a)",
       _format( statements[1] )
     )
+
+    end
   end
 end
