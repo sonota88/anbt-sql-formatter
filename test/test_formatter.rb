@@ -523,16 +523,18 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
 
     ########
     tokens = @parser.parse("a;b")
+    statements = @fmt.split_to_statements(tokens)
 
+    assert_equal(2, statements.size)
     assert_equals(
-      msg + "first statement",
-      "a",
-      @fmt.split_to_statements(tokens)[0][0].string
+      msg,
+      "name (a)",
+      _format( statements[0] )
     )
     assert_equals(
-      msg + "second statement",
-      "b",
-      @fmt.split_to_statements(tokens)[1][0].string
+      msg,
+      "name (b)",
+      _format( statements[1] )
     )
 
     ########
@@ -574,20 +576,6 @@ class TestAnbtSqlFormatter < Test::Unit::TestCase
     assert_equals(
       msg,
       "name (a)",
-      _format( statements[1] )
-    )
-
-    ########
-    tokens = @parser.parse("a;b")
-    statements = @fmt.split_to_statements(tokens)
-    assert_equals(
-      msg,
-      "name (a)",
-      _format( statements[0] )
-    )
-    assert_equals(
-      msg,
-      "name (b)",
       _format( statements[1] )
     )
   end
