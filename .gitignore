@@ -5,3 +5,6 @@ pkg/*
 
 # Emacs
 *~
+
+# Bundler
+/vendor/bundle/
