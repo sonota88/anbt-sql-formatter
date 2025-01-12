@@ -1,3 +1,15 @@
+# 0.1.1 (2025-01-12)
+
+No breaking changes.
+
+## Improvements
+
+- Avoid mutative string manipulation (coarse-tokenizer.rb: tokenize)
+  - Prevents frozen literal warnings in Ruby 3.4 (Issue #17)
+- Update comments (PR #14)
+- Some small fixes, cleanups, formatting improvements
+
+
 # 0.1.0 (2018-12-16)
 
 ## Breaking changes
