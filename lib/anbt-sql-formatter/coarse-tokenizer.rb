@@ -38,8 +38,7 @@ These are exclusive:
 =end
 
   def tokenize(str)
-    @str = str
-    @str.gsub!("\r\n", "\n")
+    @str = str.gsub("\r\n", "\n")
     out_of_quote_single   = true
     out_of_quote_double   = true
     out_of_comment_single = true
@@ -140,8 +139,8 @@ These are exclusive:
 
 
   def shift_to_buf(n)
-    @buf << @str[0...n]
-    @str[0...n] = ""
+    @buf += @str[0...n]
+    @str = @str[n..]
   end
 
 
@@ -157,7 +156,7 @@ These are exclusive:
       raise "must not happen"
     end
 
-    @str[0..(length-1)] = ""
+    @str = @str[length..]
     @mode = mode
   end
 end
