@@ -65,7 +65,7 @@ class AnbtSql
     # これ以降の文字の扱いは保留
     def symbol?(c)
       %w(" ? % & ' \( \) | * + , - . / : ; < = > !).include? c
-      #"
+      # "
     end
 
 
@@ -158,7 +158,7 @@ class AnbtSql
 
         # ２文字の記号かどうか調べる
         ch2 = char_at(@before, @pos)
-        #for (int i = 0; i < two_character_symbol.length; i++) {
+        # for (int i = 0; i < two_character_symbol.length; i++) {
         for i in 0...@two_character_symbol.length
           if (char_at(@two_character_symbol[i], 0) == @char &&
               char_at(@two_character_symbol[i], 1) == ch2)

@@ -54,8 +54,8 @@ if $0 == __FILE__
     rule.function_names << func_name.upcase
   }
 
-  #rule.indent_string = "    "
-  #rule.indent_string = "('-')"
+  # rule.indent_string = "    "
+  # rule.indent_string = "('-')"
   rule.indent_string = "|   "
 
   formatter = AnbtSql::Formatter.new(rule)
