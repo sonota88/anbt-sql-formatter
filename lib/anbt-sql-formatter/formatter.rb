@@ -393,7 +393,7 @@ class AnbtSql
         if $DEBUG
           $stderr.puts e.message, e.backtrace
           $stderr.puts "tokens: "
-          tokens.each_with_index{|t,i|
+          tokens.each_with_index{|t, i|
             $stderr.puts "index=%d: %s" % [i, t.inspect]
           }
           $stderr.puts "index/size: %d/%d / indent: %d / opt: %s" % [index, tokens.size, indent, opt]
