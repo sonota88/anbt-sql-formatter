@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 =begin rdoc
 BlancoSqlFormatterException : SQL整形ツールの例外を表します。
 

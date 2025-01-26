@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 =begin
 エスケープ文字
 =end

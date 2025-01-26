@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 class AnbtSql
   class TokenConstants
 

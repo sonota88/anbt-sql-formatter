@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 require "anbt-sql-formatter/helper"
 
 =begin

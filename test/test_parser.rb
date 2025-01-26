@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 require File.join(File.expand_path(File.dirname(__FILE__)), "helper")
 
 require "anbt-sql-formatter/rule"

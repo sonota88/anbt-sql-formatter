@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 =begin rdoc
 AnbtSqlFormatter: SQL整形ツール. SQL文を決められたルールに従い整形します。
 
