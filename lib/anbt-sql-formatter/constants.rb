@@ -74,6 +74,7 @@ class AnbtSql
        "ORDINALITY", "OUT", "PARAMETER", "PARAMETERS", "PATH", "POSTFIX",
        "PREFIX", "PREORDER", "RAW", "READS", "RECURSIVE", "REDO",
        # ANSI SQLではないのだが とても良く使われる構文
-       "TRUNCATE" ]
+       "TRUNCATE"
+      ]
   end
 end
