@@ -220,56 +220,47 @@ class AnbtSql
               equals_ignore_case(token.string, "UPDATE")   )
             indent += 2
             index += insert_return_and_indent(tokens, index + 1, indent, "+2")
-          end
 
           # indentを１つ増やし、キーワードの後ろで改行
-          if @rule.kw_plus1_indent_x_nl.any?{ |kw| equals_ignore_case(token.string, kw) }
+          elsif @rule.kw_plus1_indent_x_nl.any?{ |kw| equals_ignore_case(token.string, kw) }
             indent += 1
             index += insert_return_and_indent(tokens, index + 1, indent)
-          end
 
           # キーワードの前でindentを１つ減らして改行、キーワードの後ろでindentを戻して改行。
-          if @rule.kw_minus1_indent_nl_x_plus1_indent.any?{ |kw| equals_ignore_case(token.string, kw) }
+          elsif @rule.kw_minus1_indent_nl_x_plus1_indent.any?{ |kw| equals_ignore_case(token.string, kw) }
             index += insert_return_and_indent(tokens, index    , indent - 1)
             index += insert_return_and_indent(tokens, index + 1, indent    )
-          end
 
           # キーワードの前でindentを１つ減らして改行、キーワードの後ろでindentを戻して改行。
-          if (equals_ignore_case(token.string, "VALUES"))
+          elsif (equals_ignore_case(token.string, "VALUES"))
             indent -= 1
             index += insert_return_and_indent(tokens, index, indent)
-          end
 
           # キーワードの前でindentを１つ減らして改行
-          if (equals_ignore_case(token.string, "END"))
+          elsif (equals_ignore_case(token.string, "END"))
             indent -= 1
             index += insert_return_and_indent(tokens, index, indent)
-          end
 
           # キーワードの前で改行
-          if @rule.kw_nl_x.any?{ |kw| equals_ignore_case(token.string, kw) }
+          elsif @rule.kw_nl_x.any?{ |kw| equals_ignore_case(token.string, kw) }
             index += insert_return_and_indent(tokens, index, indent)
-          end
 
           # キーワードの前で改行, インデント+1
-          if @rule.kw_nl_x_plus1_indent.any?{ |kw| equals_ignore_case(token.string, kw) }
+          elsif @rule.kw_nl_x_plus1_indent.any?{ |kw| equals_ignore_case(token.string, kw) }
             index += insert_return_and_indent(tokens, index, indent + 1)
-          end
 
           # キーワードの前で改行。indentを強制的に０にする。
-          if (equals_ignore_case(token.string, "UNION"    ) ||
+          elsif (equals_ignore_case(token.string, "UNION"    ) ||
               equals_ignore_case(token.string, "INTERSECT") ||
               equals_ignore_case(token.string, "EXCEPT"   )   )
             indent -= 2
             index += insert_return_and_indent(tokens, index    , indent)
             index += insert_return_and_indent(tokens, index + 1, indent)
-          end
 
-          if equals_ignore_case(token.string, "BETWEEN")
+          elsif equals_ignore_case(token.string, "BETWEEN")
             encounter_between = true
-          end
 
-          if equals_ignore_case(token.string, "AND")
+          elsif equals_ignore_case(token.string, "AND")
             # BETWEEN のあとのANDは改行しない。
             if not encounter_between
               index += insert_return_and_indent(tokens, index, indent)
