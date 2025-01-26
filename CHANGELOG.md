@@ -1,3 +1,27 @@
+# 0.1.2 (2025-01-26)
+
+## Breaking changes
+
+- Changed to exclusive branching to reduce complexity (`Formatter#format_list_main_loop`).
+  - If you have not customized the rules, there will be no change in behavior.
+    - This likely applies to most users.
+  - If you have customized the rules such that keywords overlap between conditions of the branches,
+    this update may change the behavior.
+
+```ruby
+# Example of customization that may change behavior:
+
+custom_rule = AnbtSql::Rule.new
+custom_rule.kw_nl_x << "SOME_CUSTOM_KEYWORD"
+custom_rule.kw_nl_x_plus1_indent << "SOME_CUSTOM_KEYWORD"
+```
+
+## Improvements
+
+- Some cleanups, formatting improvements
+  - cleanup: Remove encoding magic comments
+
+
 # 0.1.1 (2025-01-12)
 
 No breaking changes.
